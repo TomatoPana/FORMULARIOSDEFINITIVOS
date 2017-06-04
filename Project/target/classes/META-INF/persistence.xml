@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.0" xmlns="http://java.sun.com/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd">
+  <persistence-unit name="Persistence" transaction-type="JTA">
+    <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
+    <jta-data-source>java:app/BD</jta-data-source>
+    <class>Database.Answer</class>
+    <class>Database.Categories</class>
+    <class>Database.Options</class>
+    <class>Database.Questions</class>
+    <class>Database.Quiz</class>
+    <class>Database.Users</class>
+    <class>Database.UserAnswer</class>
+    <exclude-unlisted-classes>true</exclude-unlisted-classes>
+    <properties>
+      <property name="eclipselink.jdbc.user" value="root"/>
+      <property name="eclipselink.jdbc.password" value="rootroot"/>
+    </properties>
+  </persistence-unit>
+</persistence>

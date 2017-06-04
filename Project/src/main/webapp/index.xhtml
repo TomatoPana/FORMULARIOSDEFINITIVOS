@@ -1,0 +1,58 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <f:view contentType="text/html">
+        <h:head>
+            <f:facet name="first">
+                <meta content='text/html; charset=UTF-8' http-equiv="Content-Type"/>
+                <title>PrimeFaces</title>
+            </f:facet>
+        </h:head>
+
+        <h:body>
+            <p:messages for="somekey" />
+            <p:layout fullPage="true">
+                
+                <p:layoutUnit position="north" size="100">
+                    <div class="ui-g">
+                        <h:form>
+                            <div class="ui-g-3">
+                                 <p:outputLabel>Formularios de Coco</p:outputLabel>
+                            </div>
+                            <div class="ui-g-9">
+                                <p:commandButton value="Iniciar Sesión" action="#{LoginBean.login}" ajax="false"></p:commandButton>
+                                <p:commandButton value="Registrarse" actionListener="#{RoutingBean.SignUp}" ajax="false"></p:commandButton>
+                            </div>
+                        </h:form>
+                    </div>
+                </p:layoutUnit>
+                <p:layoutUnit position="west" size="175">
+                    <!--Lista de Categorias-->
+                    <p:dataList value="#{CategoriesBean.getCategories}" var="Category" type="ordened" itemType="Category" paginator="true" styleClass="paginated">
+                        <f:facet name="header">
+                            Lista de Categorias
+                        </f:facet>
+                        #{Category.Nombre}
+                    </p:dataList>
+                </p:layoutUnit>
+
+                <p:layoutUnit position="center" id="centerPos">
+                    
+                    <h:form>
+                        <p:menuitem value="Save" actionListener="#{bean.save}"/>    
+                        <p:menuitem value="Delete" actionListener="#{bean.delete}"/>    
+                        <p:menuitem value="Go Home" url="www.primefaces.org"/> 
+                    </h:form>
+                    
+                </p:layoutUnit>
+
+            </p:layout>
+
+        </h:body>
+
+    </f:view>
+</html>
