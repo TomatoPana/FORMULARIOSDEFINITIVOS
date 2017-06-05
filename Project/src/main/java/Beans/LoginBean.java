@@ -9,7 +9,8 @@ import Database.Users;
 import java.util.Collection;
 import javax.inject.Named;
 import javax.enterprise.context.Dependent;
-import javax.faces.application.FacesMessage;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.SessionScoped;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -20,8 +21,9 @@ import javax.persistence.Query;
  *
  * @author USUARIO
  */
+@ManagedBean
 @Named(value = "LoginBean")
-@Dependent
+@SessionScoped
 public class LoginBean {
 
     /**
@@ -32,6 +34,7 @@ public class LoginBean {
     }
     
     private String username;
+    private String password;
 
     public String getUsername() {
         return username;
@@ -48,7 +51,8 @@ public class LoginBean {
     public void setPassword(String password) {
         this.password = password;
     }
-    private String password;
+    
+    
 
 
     public String login() {
@@ -58,9 +62,12 @@ public class LoginBean {
 
         Users user = new Users();
         Query query = entitymanager.createNamedQuery("Users.findLogin", Users.class);
-        query.setParameter("password", "123");
-        query.setParameter("email", "lima");
+        System.out.print(query.getParameter("email"));
+        query.setParameter("password", this.password);
+        query.setParameter("email", this.username);
         Collection<Users> results = query.getResultList();
+        System.out.println(username);
+        System.out.println(password);
         for(Users x : results)
         {
             System.out.println(x.getEmail());

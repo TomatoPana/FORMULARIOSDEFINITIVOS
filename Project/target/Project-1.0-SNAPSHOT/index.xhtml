@@ -19,14 +19,21 @@
                 
                 <p:layoutUnit position="north" size="100">
                     <div class="ui-g">
+                        <!--
                         <h:form>
                             <div class="ui-g-3">
                                  <p:outputLabel>Formularios de Coco</p:outputLabel>
                             </div>
                             <div class="ui-g-9">
-                                <p:commandButton value="Iniciar Sesión" action="#{LoginBean.login}" ajax="false"></p:commandButton>
                                 <p:commandButton value="Registrarse" actionListener="#{RoutingBean.SignUp}" ajax="false"></p:commandButton>
                             </div>
+                        </h:form>
+                        -->
+                        <h:form>
+                            <p:inputText value="#{LoginBean.username}" />
+                            <p:inputText value="#{LoginBean.password}" />
+                            <p:commandButton value="Iniciar Sesión" actionListener="#{LoginBean.login}" ajax="false" ></p:commandButton>
+                                
                         </h:form>
                     </div>
                 </p:layoutUnit>
