@@ -8,10 +8,9 @@ package Beans;
 import Database.Users;
 import java.util.Collection;
 import javax.inject.Named;
-import javax.enterprise.context.Dependent;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
-
+import javax.faces.context.FacesContext;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
@@ -57,12 +56,17 @@ public class LoginBean {
 
     public String login() {
         System.out.println("hola");
+        FacesContext context = FacesContext.getCurrentInstance();
         EntityManagerFactory emfactory = Persistence.createEntityManagerFactory( "Persistence" );
         EntityManager entitymanager = emfactory.createEntityManager();
-
+        String result = (String) context.getExternalContext().getSessionMap().get("user");
+        if(result != null) {
+            System.out.println(result);
+            return "userhome?faces-redirect=true";
+        }
+        else {
         Users user = new Users();
         Query query = entitymanager.createNamedQuery("Users.findLogin", Users.class);
-        System.out.print(query.getParameter("email"));
         query.setParameter("password", this.password);
         query.setParameter("email", this.username);
         Collection<Users> results = query.getResultList();
@@ -81,7 +85,10 @@ public class LoginBean {
         } else {
             
             System.out.println("No fue nulo");
+            
+            context.getExternalContext().getSessionMap().put("user", username);
             return "userhome?faces-redirect=true";
+        }
         }
     }
 
