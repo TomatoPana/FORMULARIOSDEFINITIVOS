@@ -99,10 +99,10 @@ public class RegistroBean {
     
     
     public String registro() {
-        if(password != confirmPassword){
-            System.out.println("contraseñas diferentes");
-            return null;
-        }
+        //if(password != confirmPassword){
+        //    System.out.println("contraseñas diferentes");
+        //    return null;
+        //}
         System.out.println("hola");
         FacesContext context = FacesContext.getCurrentInstance();
         EntityManagerFactory emfactory = Persistence.createEntityManagerFactory( "Persistence" );
@@ -124,17 +124,17 @@ public class RegistroBean {
         {
             System.out.println(x.getEmail());
         }
-        if (results.size() < 1) {
+        if (results.size() > 1) {
             
             nombre = null;
             password = null;
             email = null;
             id = 0;
             dateTime = null;
-            System.out.println("Fue nulo");
+            System.out.println("ya existe");
             return null;
         } else {
-            System.out.println("No fue nulo");
+            System.out.println("Nuevo ingreso");
             entitymanager.getTransaction().begin();
             Users usuario = new Users();
             usuario.setNombre(nombre);
