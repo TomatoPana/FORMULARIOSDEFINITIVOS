@@ -114,25 +114,22 @@ public class RegistroBean {
         }
         else {
         Users user = new Users();
-        Query query = entitymanager.createNamedQuery("Users.findLogin", Users.class);
-        query.setParameter("password", this.password);
+        Query query = entitymanager.createNamedQuery("Users.findByEmail", Users.class);
         query.setParameter("email", this.email);
         Collection<Users> results = query.getResultList();
-        System.out.println(user);
-        System.out.println(password);
         for(Users x : results)
         {
             System.out.println(x.getEmail());
         }
-        if (results.size() > 1) {
+        if (results.size() > 0) {
             
             nombre = null;
             password = null;
+            confirmPassword = null;
             email = null;
             id = 0;
             dateTime = null;
-            System.out.println("ya existe");
-            return null;
+            return "/forms/faces/registro.xhtml?error=existe";
         } else {
             System.out.println("Nuevo ingreso");
             entitymanager.getTransaction().begin();
@@ -142,10 +139,11 @@ public class RegistroBean {
             usuario.setId(id);
             usuario.setPassword(password);
             usuario.setTipo((short) 0);
-        
+            usuario.setDateTime(new Date());
             entitymanager.persist(usuario);
             entitymanager.getTransaction().commit();
-            return "userhome?faces-redirect=true";
+            entitymanager.close();
+            return "/forms/";
         }
         }
     }

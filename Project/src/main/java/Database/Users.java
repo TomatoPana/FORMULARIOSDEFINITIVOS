@@ -67,7 +67,6 @@ public class Users implements Serializable {
     @Column(name = "Tipo")
     private short tipo;
     @Basic(optional = false)
-    @NotNull
     @Column(name = "date_time")
     @Temporal(TemporalType.TIMESTAMP)
     private Date dateTime;

@@ -11,11 +11,6 @@
         <managed-bean-scope>view</managed-bean-scope>
     </managed-bean>
     <managed-bean>
-        <managed-bean-name>category</managed-bean-name>
-        <managed-bean-class>Beans.Category</managed-bean-class>
-        <managed-bean-scope>application</managed-bean-scope>
-    </managed-bean>
-    <managed-bean>
         <managed-bean-name>logInController</managed-bean-name>
         <managed-bean-class>Beans.LogInController</managed-bean-class>
         <managed-bean-scope>request</managed-bean-scope>
