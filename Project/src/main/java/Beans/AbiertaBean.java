@@ -62,7 +62,7 @@ public class AbiertaBean {
     private int quizId;
     private String question;
     private String type;
-     public void String Registrarpregunta() {
+     public void Registrarpregunta() {
         return;
     }
     

@@ -13,7 +13,7 @@ and open the template in the editor.
     
     <f:view contentType="text/html">
     <head>
-        <title>Registro de usuarios</title>
+        <title>Pregunta Usuarios</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     </head>
     <h:body>
@@ -22,9 +22,9 @@ and open the template in the editor.
                     <div class="ui-g">
                         <h:form>
                             Pregunta:
-                            <p:inputTextarea value="#{AbiertaBean.nombre}" />
+                            <p:inputTextarea value="#{AbiertaBean.question}" />
                             <br></br>
-                            <p:commandButton value="Registro" actionListener="#{AbiertaBean.registro()}" ajax="false" ></p:commandButton>           
+                            <p:commandButton value="Registro" actionListener="#{AbiertaBean.Registrarpregunta()}" ajax="false" ></p:commandButton>           
                         </h:form>
                     </div>
                 </p:layoutUnit>
