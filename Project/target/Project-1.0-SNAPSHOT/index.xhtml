@@ -15,50 +15,85 @@
 
         <h:body>
             <p:messages for="somekey" />
-            <p:layout fullPage="true">
                 
-                <p:layoutUnit position="north" size="100">
-                    <div class="ui-g">
-                        <!--
-                        <h:form>
-                            <div class="ui-g-3">
-                                 <p:outputLabel>Formularios de Coco</p:outputLabel>
-                            </div>
-                            <div class="ui-g-9">
-                                <p:commandButton value="Registrarse" actionListener="#{RoutingBean.SignUp}" ajax="false"></p:commandButton>
-                            </div>
-                        </h:form>
-                        -->
-                        <h:form>
-                            <p:inputText value="#{LoginBean.username}" />
-                            <p:inputText value="#{LoginBean.password}" />
-                            <p:commandButton value="Iniciar Sesión" actionListener="#{LoginBean.login}" ajax="false" ></p:commandButton>
-                                
-                        </h:form>
-                    </div>
-                </p:layoutUnit>
-                <p:layoutUnit position="west" size="175">
-                    <!--Lista de Categorias-->
+            <p:dialog header="Iniciar sesion" widgetVar="login" modal="true">
+                <h:form>
+                    <h:panelGrid columns="2" cellpadding="5">
+                        <p:outputLabel>Correo: </p:outputLabel>
+                        <p:inputText value="#{LoginBean.username}" />
+                        <p:outputLabel>Contraseña: </p:outputLabel>
+                        <p:password value="#{LoginBean.password}" />
+                        <p:commandButton value="Iniciar Sesión" actionListener="#{LoginBean.login}" ajax="false" ></p:commandButton>
+                    </h:panelGrid>
+                </h:form>
+
+            </p:dialog>  
+            <p:dialog header="Registrarse" widgetVar="signup" modal="true" >
+                <h:form>
+                    <p:messages id="signUpMessagge" showDetail="true" autoUpdate="true" closable="true" />
+                    <h:panelGrid columns="2" cellpadding="5">
+                        <p:outputLabel>Nombre:</p:outputLabel>
+                        <p:inputText value="#{RegistroBean.nombre}" />
+                        <p:outputLabel>correo:</p:outputLabel>
+                        <p:inputText value="#{RegistroBean.email}" />
+                        <p:outputLabel>Contraseña:</p:outputLabel>
+                        <p:inputText value="#{RegistroBean.password}" />
+                        <p:outputLabel>Confirmar contraseña:</p:outputLabel>
+                        <p:inputText value="#{RegistroBean.confirmPassword}" />
+                        <p:commandButton value="Registro" actionListener="#{RegistroBean.registro}" ajax="true"></p:commandButton>           
+                    </h:panelGrid>
+                </h:form>
+            </p:dialog>   
+
+
+
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <h:form>
+                        <p:menubar>
+                            <p:menuitem value="Registrarse" url="#"  onclick="PF('signup').show();" icon="ui-icon-pencil"/>
+                            <p:menuitem value="Iniciar sesión" url="#" onclick="PF('login').show();" icon="ui-icon-home"/>
+                        </p:menubar>    
+                    </h:form>
+
+
+                </div>
+                <div class="ui-g-12 ui-md-2">
                     <p:dataList value="#{categoriesBean.lista}" var="category" type="ordered" itemType="none" paginator="true" styleClass="paginated">
                         <f:facet name="header">
                             Lista de Categorias
                         </f:facet>
                         <h:outputText value="#{category.name}" style="display:inline-block"/>
-                        
                     </p:dataList>
-                </p:layoutUnit>
 
-                <p:layoutUnit position="center" id="centerPos">
-                    
-                    <h:form>
-                        <p:menuitem value="Save" actionListener="#{bean.save}"/>    
-                        <p:menuitem value="Delete" actionListener="#{bean.delete}"/>    
-                        <p:menuitem value="Go Home" url="www.primefaces.org"/> 
-                    </h:form>
-                    
-                </p:layoutUnit>
+                </div>
+                <div class="ui-g-12 ui-md-10 ui-g-nopad">
+                    <!-- TODO EL CONTENIDO -->
+                    <div class="ui-g-12 ui-g-nopad">
+                        <div class="ui-g">
+                            <div class="ui-g-12 ui-md-4">
 
-            </p:layout>
+
+                            </div>
+                            <div class="ui-g-12 ui-md-4">Maecenas vel nisi aliquet, vulputate tortor id, laoreet massa. Maecenas mattis tristique bibendum. Suspendisse vel mi dictum, vestibulum lacus quis, pulvinar quam. Proin vulputate, nibh at finibus varius, leo eros lacinia elit, nec blandit odio tellus a justo. Donec nec ex auctor, tristique nulla nec, rutrum sapien.</div>
+                            <div class="ui-g-12 ui-md-4">Proin efficitur in leo eget ornare. Nam vestibulum neque sed velit sagittis sodales. Sed scelerisque hendrerit magna a hendrerit. Cras tempor sem at justo pharetra convallis. Curabitur vel sodales purus. Vestibulum interdum facilisis nulla imperdiet suscipit. Quisque lectus felis, condimentum eget hendrerit sit amet.</div>
+                        </div>
+
+
+                        <div class="ui-g">
+                            <div class="ui-g-12 ui-md-6">Phasellus faucibus purus volutpat mauris lacinia sodales. Ut sit amet sapien facilisis, commodo dui non, fringilla tellus. Quisque tempus facilisis nisi sodales finibus. Pellentesque neque orci, ullamcorper vitae ligula quis, dignissim euismod augue.</div>
+                            <div class="ui-g-12 ui-md-6">Fusce ullamcorper congue massa, eget ullamcorper nunc lobortis egestas. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque ultrices dui eget dolor feugiat dapibus. Aliquam pretium leo et egestas luctus. Nunc facilisis gravida tellus.</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="ui-g-12">
+                    Footer
+                </div>
+            </div>  
+                
+                
+
+
 
         </h:body>
 
