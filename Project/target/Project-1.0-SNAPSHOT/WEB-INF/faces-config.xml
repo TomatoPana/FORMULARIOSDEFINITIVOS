@@ -25,4 +25,9 @@
         <managed-bean-class>Beans.RegistroBean</managed-bean-class>
         <managed-bean-scope>session</managed-bean-scope>
     </managed-bean>
+    <managed-bean>
+        <managed-bean-name>RangosBean</managed-bean-name>
+        <managed-bean-class>Beans.RangosBean</managed-bean-class>
+        <managed-bean-scope>session</managed-bean-scope>
+    </managed-bean>
 </faces-config>
