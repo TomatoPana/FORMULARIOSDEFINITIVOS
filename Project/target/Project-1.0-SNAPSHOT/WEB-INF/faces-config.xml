@@ -25,4 +25,9 @@
         <managed-bean-class>Beans.LoginBean</managed-bean-class>
         <managed-bean-scope>session</managed-bean-scope>
     </managed-bean>
+    <managed-bean>
+        <managed-bean-name>AbiertaBean</managed-bean-name>
+        <managed-bean-class>Beans.AbiertaBean</managed-bean-class>
+        <managed-bean-scope>session</managed-bean-scope>
+    </managed-bean>
 </faces-config>

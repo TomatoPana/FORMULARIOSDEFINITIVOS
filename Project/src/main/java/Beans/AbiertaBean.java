@@ -18,7 +18,7 @@ import javax.persistence.Query;
 
 
 @ManagedBean
-@Named(value = "RegistroBean")
+@Named(value = "AbiertaBean")
 @SessionScoped
 
 /**
@@ -63,6 +63,17 @@ public class AbiertaBean {
     private String question;
     private String type;
      public void Registrarpregunta() {
+         if(!(question.equals(""))){
+        EntityManagerFactory emfactory = Persistence.createEntityManagerFactory( "Persistence" );
+        EntityManager entitymanager = emfactory.createEntityManager();
+            entitymanager.getTransaction().begin();
+            Question q = new Question();
+            q.setQuestion(question);
+            q.setType("abierta");
+            System.out.println("igreso correcto de datos");
+            entitymanager.persist(q);
+            entitymanager.getTransaction().commit();
+         } 
         return;
     }
     
