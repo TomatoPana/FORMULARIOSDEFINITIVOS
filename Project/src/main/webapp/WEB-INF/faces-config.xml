@@ -11,6 +11,11 @@
         <managed-bean-scope>view</managed-bean-scope>
     </managed-bean>
     <managed-bean>
+        <managed-bean-name>FilterBean</managed-bean-name>
+        <managed-bean-class>Beans.FilterBean</managed-bean-class>
+        <managed-bean-scope>view</managed-bean-scope>
+    </managed-bean>
+    <managed-bean>
         <managed-bean-name>logInController</managed-bean-name>
         <managed-bean-class>Beans.LogInController</managed-bean-class>
         <managed-bean-scope>request</managed-bean-scope>
@@ -25,4 +30,6 @@
         <managed-bean-class>Beans.RegistroBean</managed-bean-class>
         <managed-bean-scope>session</managed-bean-scope>
     </managed-bean>
+
+    
 </faces-config>

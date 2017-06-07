@@ -37,19 +37,40 @@
                         </h:form>
                     </div>
                 </p:layoutUnit>
-                <p:layoutUnit position="west" size="175">
+                <p:layoutUnit position="west" size="300">
                     <!--Lista de Categorias-->
                     <p:dataList value="#{categoriesBean.lista}" var="category" type="ordered" itemType="none" paginator="true" styleClass="paginated">
                         <f:facet name="header">
                             Lista de Categorias
                         </f:facet>
                         <h:outputText value="#{category.name}" style="display:inline-block"/>
-                        
                     </p:dataList>
+                    
+                    <!-- Filtro de Busqueda -->
+                    <h:form>
+                        <p:panel header="Filtro de Busqueda" style="margin-bottom: 10px;">
+                            <h:panelGrid columns="1">
+                                <p:outputLabel for="categoryList" value="Categoria: "/>
+                                <p:selectOneMenu id="categoryList" value="#{categoriesBean.categoryName}" style="width:200px;">
+                                    <f:selectItem itemLabel="Selecciona una categoria" itemValue="" noSelectionOption="true" />
+                                    <f:selectItems value="#{categoriesBean.category}" />
+                                </p:selectOneMenu>
+                            </h:panelGrid>
+                        </p:panel>
+                    </h:form>
+                    
                 </p:layoutUnit>
 
                 <p:layoutUnit position="center" id="centerPos">
+                    <!--Lista de Categorias-->
+                    <p:dataList value="#{FilterBean.lista}"  type="ordered" itemType="none" paginator="true" styleClass="paginated">
+                        <f:facet name="header">
+                            Lista de Encuestas
+                        </f:facet>
+                        <h:outputText value="#{Quiz.title}" style="display:inline-block"/>
+                    </p:dataList>
                     
+                    Hola mundo lml
                     <h:form>
                         <p:menuitem value="Save" actionListener="#{bean.save}"/>    
                         <p:menuitem value="Delete" actionListener="#{bean.delete}"/>    

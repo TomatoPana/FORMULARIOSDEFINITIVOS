@@ -32,15 +32,39 @@ public class FilterBean {
     // Add business logic below. (Right-click in editor and choose
     // "Insert Code > Add Business Method")
     
-    private List<Database.Quiz> listaEncuesta;
-    private Database.Quiz selectedCategory;
+    public List<Database.Quiz> lista;
+    public Database.Quiz selectedCategory;
     
     @PostConstruct 
     public void init(){
         EntityManagerFactory emfactory = Persistence.createEntityManagerFactory("Persistence");
         EntityManager entitymanager = emfactory.createEntityManager();
         Query query = entitymanager.createNamedQuery("Quiz.findAll", Quiz.class);
-        listaEncuesta = query.getResultList();
+        lista = query.getResultList();
+        System.out.println("Mostrar las encuestas");
+        for (Database.Quiz a: lista) {
+            System.out.println(a.getTitle());
+            System.out.println(a.getCategoryId());
+        }
+        System.out.println("Fin de Mostrar las encuestas");
         
     }
+
+    public List<Quiz> getLista() {
+        return lista;
+    }
+
+    public void setLista(List<Quiz> lista) {
+        this.lista = lista;
+    }
+
+    public Quiz getSelectedCategory() {
+        return selectedCategory;
+    }
+
+    public void setSelectedCategory(Quiz selectedCategory) {
+        this.selectedCategory = selectedCategory;
+    }
+    
+    
 }

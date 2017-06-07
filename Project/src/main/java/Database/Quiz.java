@@ -69,9 +69,8 @@ public class Quiz implements Serializable {
     private int categoryId;
     @Basic(optional = false)
     @NotNull
-    @Lob
     @Column(name = "enabled")
-    private byte[] enabled;
+    private boolean enabled;
 
     public Quiz() {
     }
@@ -80,7 +79,7 @@ public class Quiz implements Serializable {
         this.id = id;
     }
 
-    public Quiz(Integer id, String title, int userId, Date creationDate, int categoryId, byte[] enabled) {
+    public Quiz(Integer id, String title, int userId, Date creationDate, int categoryId, boolean enabled) {
         this.id = id;
         this.title = title;
         this.userId = userId;
@@ -137,11 +136,11 @@ public class Quiz implements Serializable {
         this.categoryId = categoryId;
     }
 
-    public byte[] getEnabled() {
+    public boolean getEnabled() {
         return enabled;
     }
 
-    public void setEnabled(byte[] enabled) {
+    public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }
 
