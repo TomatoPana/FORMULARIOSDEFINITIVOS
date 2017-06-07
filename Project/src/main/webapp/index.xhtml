@@ -12,22 +12,23 @@
                 <title>PrimeFaces</title>
             </f:facet>
         </h:head>
-
+        
         <h:body>
-            <p:messages for="somekey" />
-                
-            <p:dialog header="Iniciar sesion" widgetVar="login" modal="true">
-                <h:form>
+            <p:dialog header="Iniciar sesion" widgetVar="login" modal="true" id='loginModal'>
+                <h:outputText value="#{param['error']!=null?'Porfavor vuelva a intentarlo':null}" />
+                <h:form id="login" >
                     <h:panelGrid columns="2" cellpadding="5">
                         <p:outputLabel>Correo: </p:outputLabel>
                         <p:inputText value="#{LoginBean.username}" />
                         <p:outputLabel>Contraseña: </p:outputLabel>
                         <p:password value="#{LoginBean.password}" />
-                        <p:commandButton value="Iniciar Sesión" actionListener="#{LoginBean.login}" ajax="false" ></p:commandButton>
+                        <p:commandButton value="Iniciar Sesión" actionListener="#{LoginBean.login()}" ajax="true" ></p:commandButton>
                     </h:panelGrid>
                 </h:form>
 
             </p:dialog>  
+            
+            
             <p:dialog header="Registrarse" widgetVar="signup" modal="true" >
                 <h:form>
                     <p:messages id="signUpMessagge" showDetail="true" autoUpdate="true" closable="true" />
@@ -37,9 +38,9 @@
                         <p:outputLabel>correo:</p:outputLabel>
                         <p:inputText value="#{RegistroBean.email}" />
                         <p:outputLabel>Contraseña:</p:outputLabel>
-                        <p:inputText value="#{RegistroBean.password}" />
+                        <p:password value="#{RegistroBean.password}" />
                         <p:outputLabel>Confirmar contraseña:</p:outputLabel>
-                        <p:inputText value="#{RegistroBean.confirmPassword}" />
+                        <p:password value="#{RegistroBean.confirmPassword}" />
                         <p:commandButton value="Registro" actionListener="#{RegistroBean.registro}" ajax="true"></p:commandButton>           
                     </h:panelGrid>
                 </h:form>
@@ -53,6 +54,7 @@
                         <p:menubar>
                             <p:menuitem value="Registrarse" url="#"  onclick="PF('signup').show();" icon="ui-icon-pencil"/>
                             <p:menuitem value="Iniciar sesión" url="#" onclick="PF('login').show();" icon="ui-icon-home"/>
+
                         </p:menubar>    
                     </h:form>
 
@@ -86,15 +88,12 @@
                         </div>
                     </div>
                 </div>
-                <div class="ui-g-12">
-                    Footer
-                </div>
             </div>  
                 
                 
 
 
-
+            
         </h:body>
 
     </f:view>

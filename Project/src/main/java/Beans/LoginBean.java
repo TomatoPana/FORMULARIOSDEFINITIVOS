@@ -6,7 +6,11 @@
 package Beans;
 
 import Database.Users;
+import java.io.IOException;
 import java.util.Collection;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.inject.Named;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
@@ -18,7 +22,7 @@ import javax.persistence.Query;
 
 /**
  *
- * @author USUARIO
+ * @author Luis Iván Morett
  */
 @ManagedBean
 @Named(value = "LoginBean")
@@ -34,7 +38,7 @@ public class LoginBean {
     
     private String username;
     private String password;
-
+    
     public String getUsername() {
         return username;
     }
@@ -59,17 +63,11 @@ public class LoginBean {
         FacesContext context = FacesContext.getCurrentInstance();
         EntityManagerFactory emfactory = Persistence.createEntityManagerFactory( "Persistence" );
         EntityManager entitymanager = emfactory.createEntityManager();
-        String result = (String) context.getExternalContext().getSessionMap().get("user");
-        if(result != null) {
-            System.out.println(result);
-            return "userhome?faces-redirect=true";
-        }
-        else {
-        Users user = new Users();
+        
         Query query = entitymanager.createNamedQuery("Users.findLogin", Users.class);
         query.setParameter("password", this.password);
         query.setParameter("email", this.username);
-        Collection<Users> results = query.getResultList();
+        List<Users> results = query.getResultList();
         System.out.println(username);
         System.out.println(password);
         for(Users x : results)
@@ -77,24 +75,38 @@ public class LoginBean {
             System.out.println(x.getEmail());
         }
         if (results.size() < 1) {
-            
             username = null;
             password = null;
-            System.out.println("Fue nulo");
-            return null;
+            try {
+                context.getExternalContext().redirect("/forms?error=log");
+            } catch (IOException ex) {
+                Logger.getLogger(LoginBean.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            return "/forms?error=log";
         } else {
             
             System.out.println("No fue nulo");
-            
             context.getExternalContext().getSessionMap().put("user", username);
-            return "userhome?faces-redirect=true";
-        }
+            context.getExternalContext().getSessionMap().put("id", results.get(0).getId());
+            try {
+                context.getExternalContext().redirect("/forms/faces/dashboard.xhtml");
+            } catch (IOException ex) {
+                Logger.getLogger(LoginBean.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            return "/forms/faces/dashboard/";
         }
     }
 
     public String logout() {
-        
-        return "index?faces-redirect=true";
+        FacesContext context = FacesContext.getCurrentInstance();
+        context.getExternalContext().getSessionMap().remove("user");
+        context.getExternalContext().getSessionMap().remove("id");
+        try {
+                context.getExternalContext().redirect("/forms");
+            } catch (IOException ex) {
+                Logger.getLogger(LoginBean.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        return "/forms";
     }
     
 }
