@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 package Beans;
-import Database.Users;
+import Database.Questions;
 import java.util.Collection;
 import java.util.Date;
 import javax.inject.Named;
@@ -62,12 +62,13 @@ public class AbiertaBean {
     private int quizId;
     private String question;
     private String type;
+    
      public void Registrarpregunta() {
          if(!(question.equals(""))){
         EntityManagerFactory emfactory = Persistence.createEntityManagerFactory( "Persistence" );
         EntityManager entitymanager = emfactory.createEntityManager();
             entitymanager.getTransaction().begin();
-            Question q = new Question();
+            Questions q = new Questions();
             q.setQuestion(question);
             q.setType("abierta");
             System.out.println("igreso correcto de datos");
