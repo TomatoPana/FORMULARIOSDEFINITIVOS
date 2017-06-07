@@ -25,4 +25,14 @@
         <managed-bean-class>Beans.LoginBean</managed-bean-class>
         <managed-bean-scope>session</managed-bean-scope>
     </managed-bean>
+    <managed-bean>
+        <managed-bean-name>PreguntaMulti</managed-bean-name>
+        <managed-bean-class>Beans.PreguntaMulti</managed-bean-class>
+        <managed-bean-scope>session</managed-bean-scope>
+    </managed-bean>
+     <managed-bean>
+        <managed-bean-name>OpcionMulti</managed-bean-name>
+        <managed-bean-class>Beans.OpcionMulti</managed-bean-class>
+        <managed-bean-scope>session</managed-bean-scope>
+    </managed-bean>
 </faces-config>

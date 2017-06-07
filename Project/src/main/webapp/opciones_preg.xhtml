@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+    
+    <f:view contentType="text/html">
+    <head>
+        <title>Opcion Multiple</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    </head>
+<body>
+<div>Riko</div>
+
+
+        <h:form>
+                    <h:selectOneRadio value="">
+                        <p:inputText value="#{PreguntaMulti.pregunta}" />
+                        <f:selectItem itemValue="#{OpcionMulti.opcion1}" itemLabel="opcion 1 " /> 
+                        <f:selectItem itemValue="#{OpcionMulti.opcion2}" itemLabel="opcion 2" />
+                        <f:selectItem itemValue="#{OpcionMulti.opcion3}" itemLabel="opcion 3" /> 
+                        <f:selectItem itemValue="#{OpcionMulti.opcion4}" itemLabel="opcion 4" />
+                    </h:selectOneRadio>
+
+                    <h:selectOneRadio value="">
+                        <p:inputText value="#{PreguntaMulti.pregunta}" />
+                        <f:selectItem itemValue="#{OpcionMulti.opcion1}" itemLabel="opcion 1" />
+                        <f:selectItem itemValue="#{OpcionMulti.opcion2}" itemLabel="opcion 2" />
+                        <f:selectItem itemValue="#{OpcionMulti.opcion3}" itemLabel="opcion 3" /> 
+                        <f:selectItem itemValue="#{OpcionMulti.opcion4}" itemLabel="opcion 4" /> 
+                    </h:selectOneRadio>
+        </h:form>
+</body>
+        
+    </f:view>
+</html>
+/*
+7
+*/
