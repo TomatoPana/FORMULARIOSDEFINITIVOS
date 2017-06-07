@@ -6,13 +6,9 @@
 package Beans;
 
 import Database.Categories;
-import Database.Users;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
 import javax.faces.bean.ViewScoped;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -33,11 +29,6 @@ public class CategoriesBean {
         EntityManager entitymanager = emfactory.createEntityManager();
         Query query = entitymanager.createNamedQuery("Categories.findAll", Categories.class);
         lista = query.getResultList();
-        for(Database.Categories a: lista)
-        {
-            System.out.println(a.getName());
-        }
-        System.out.println("End-init");
     }
 
     public Categories getSelectedCategory() {

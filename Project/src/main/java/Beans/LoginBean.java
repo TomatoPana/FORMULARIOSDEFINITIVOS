@@ -59,7 +59,6 @@ public class LoginBean {
 
 
     public String login() {
-        System.out.println("hola");
         FacesContext context = FacesContext.getCurrentInstance();
         EntityManagerFactory emfactory = Persistence.createEntityManagerFactory( "Persistence" );
         EntityManager entitymanager = emfactory.createEntityManager();
@@ -68,11 +67,9 @@ public class LoginBean {
         query.setParameter("password", this.password);
         query.setParameter("email", this.username);
         List<Users> results = query.getResultList();
-        System.out.println(username);
-        System.out.println(password);
-        for(Users x : results)
+        for(Users x: results)
         {
-            System.out.println(x.getEmail());
+            System.out.println(x.getNombre());
         }
         if (results.size() < 1) {
             username = null;
@@ -85,9 +82,9 @@ public class LoginBean {
             return "/forms?error=log";
         } else {
             
-            System.out.println("No fue nulo");
             context.getExternalContext().getSessionMap().put("user", username);
-            context.getExternalContext().getSessionMap().put("id", results.get(0).getId());
+            Database.Users usuario = (Database.Users) results.get(0);
+            context.getExternalContext().getSessionMap().put("id", usuario.getId());
             try {
                 context.getExternalContext().redirect("/forms/faces/dashboard.xhtml");
             } catch (IOException ex) {

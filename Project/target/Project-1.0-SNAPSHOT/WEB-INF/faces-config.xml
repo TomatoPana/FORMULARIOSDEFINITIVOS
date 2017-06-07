@@ -30,4 +30,9 @@
         <managed-bean-class>Beans.RegistroAdminBean</managed-bean-class>
         <managed-bean-scope>session</managed-bean-scope>
     </managed-bean>
+    <managed-bean>
+        <managed-bean-name>MyQuizzesBean</managed-bean-name>
+        <managed-bean-class>Beans.MyQuizzesBean</managed-bean-class>
+        <managed-bean-scope>view</managed-bean-scope>
+    </managed-bean>
 </faces-config>

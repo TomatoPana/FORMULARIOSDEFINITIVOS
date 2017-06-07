@@ -13,24 +13,35 @@
             </f:facet>
         </h:head>
         <h:body>
+            <p:dialog header="Nueva encuesta" widgetVar="nueva" modal="true" >
+                <h:form>
+                    <p:messages id="signUpMessagge" showDetail="true" autoUpdate="true" closable="true" />
+                    <h:panelGrid columns="2" cellpadding="5">
+                        <p:outputLabel>Titulo:</p:outputLabel>
+                        <p:inputText value="" />
+                        <p:outputLabel>Categoria:</p:outputLabel>
+                        <p:inputText value="" />
+                        <p:commandButton value="Registro" ajax="true"></p:commandButton>           <!--ACTION LISTENER-->
+                    </h:panelGrid>
+                </h:form>
+            </p:dialog>  
             <div class="ui-g">
                 <div class="ui-g-12">
-                    <h:form>
+                    <h:form id="formulario">
                         <p:menubar>
                             <p:menuitem value="Nueva encuesta" url="#"  onclick="PF('nueva').show();" icon="ui-icon-pencil"/>
-                            <p:menuitem value="Cerrar sesión" url="#" actionListener="#{LoginBean.logOut()}" icon="ui-icon-home"/>
-
+                            <p:menuitem value="Cerrar sesión" actionListener="#{LoginBean.logout()}" ajax="false"  icon="ui-icon-home"/>
                         </p:menubar>    
                     </h:form>
 
 
                 </div>
                 <div class="ui-g-12 ui-md-2">
-                    <p:dataList value="#{categoriesBean.lista}" var="category" type="ordered" itemType="none" paginator="true" styleClass="paginated">
+                    <p:dataList value="#{myQuizzesBean.lista}" var="selectedQuiz" type="ordered" itemType="none" paginator="true" styleClass="paginated">
                         <f:facet name="header">
-                            Lista de Categorias
+                            Mis encuestas
                         </f:facet>
-                        <h:outputText value="#{category.name}" style="display:inline-block"/>
+                        <h:outputText value="#{selectedQuiz.title}" style="display:inline-block"/>
                     </p:dataList>
 
                 </div>
@@ -52,9 +63,6 @@
                             <div class="ui-g-12 ui-md-6">Fusce ullamcorper congue massa, eget ullamcorper nunc lobortis egestas. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque ultrices dui eget dolor feugiat dapibus. Aliquam pretium leo et egestas luctus. Nunc facilisis gravida tellus.</div>
                         </div>
                     </div>
-                </div>
-                <div class="ui-g-12">
-                    Footer
                 </div>
             </div>  
                 

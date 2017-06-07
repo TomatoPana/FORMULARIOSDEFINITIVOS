@@ -5,7 +5,7 @@ import javax.annotation.Generated;
 import javax.persistence.metamodel.SingularAttribute;
 import javax.persistence.metamodel.StaticMetamodel;
 
-@Generated(value="EclipseLink-2.5.2.v20140319-rNA", date="2017-06-06T19:16:49")
+@Generated(value="EclipseLink-2.5.2.v20140319-rNA", date="2017-06-06T22:31:51")
 @StaticMetamodel(Quiz.class)
 public class Quiz_ { 
 
@@ -15,6 +15,6 @@ public class Quiz_ {
     public static volatile SingularAttribute<Quiz, Date> creationDate;
     public static volatile SingularAttribute<Quiz, Integer> userId;
     public static volatile SingularAttribute<Quiz, Integer> categoryId;
-    public static volatile SingularAttribute<Quiz, byte[]> enabled;
+    public static volatile SingularAttribute<Quiz, Boolean> enabled;
 
 }
