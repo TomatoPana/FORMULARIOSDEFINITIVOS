@@ -45,7 +45,21 @@
                     </h:panelGrid>
                 </h:form>
             </p:dialog>   
+            
+            <p:dialog header="Iniciar sesion" widgetVar="login" modal="true" id='loginModal'>
+                <h:outputText value="#{param['error']!=null?'Porfavor vuelva a intentarlo':null}" />
+                <h:form id="login" >
+                    <h:panelGrid columns="2" cellpadding="5" id="dynaFormGroup">
+                        <pe:dynaForm>
+                            
+                        </pe:dynaForm>
+                        <p:outputLabel>Correo: </p:outputLabel>
+                        <p:inputText value="#{answerQuizz.email}" />
+                        <p:commandButton value="Iniciar Sesión" actionListener="#{LoginBean.next()}" ajax="true" ></p:commandButton>
+                    </h:panelGrid>
+                </h:form>
 
+            </p:dialog>  
 
 
             <div class="ui-g">

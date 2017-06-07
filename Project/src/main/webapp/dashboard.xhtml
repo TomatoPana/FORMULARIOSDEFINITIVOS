@@ -3,7 +3,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:f="http://java.sun.com/jsf/core"
-      xmlns:p="http://primefaces.org/ui">
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
 
     <f:view contentType="text/html">
         <h:head>
@@ -17,10 +18,7 @@
                 <h:form>
                     <p:messages id="signUpMessagge" showDetail="true" autoUpdate="true" closable="true" />
                     <h:panelGrid columns="2" cellpadding="5">
-                        <p:outputLabel>Titulo:</p:outputLabel>
-                        <p:inputText value="" />
-                        <p:outputLabel>Categoria:</p:outputLabel>
-                        <p:inputText value="" />
+   
                         <p:commandButton value="Registro" ajax="true"></p:commandButton>           <!--ACTION LISTENER-->
                     </h:panelGrid>
                 </h:form>
@@ -41,10 +39,9 @@
                         <f:facet name="header">
                             Mis encuestas
                         </f:facet>
-                        <p:commandLink update=":botones" title="Botones de: #{outputQuiz.title}" styleClass="ui-icon ui-icon-search" style="float:left;margin-right:10px">
-                            <f:setPropertyActionListener value="#{outputQuiz.id}" target="#{myQuizzesBean.selectedQuiz.id}"/>
+                        <p:commandLink update="tituloQuiz botones" actionListener="#{myQuizzesBean.setSelectedQuiz(outputQuiz)}" >
+                            <h:outputText value="#{outputQuiz.title}" />
                         </p:commandLink>
-                        <h:outputText value="#{outputQuiz.title}" style="display:inline-block"/>
                     </p:dataList>
 
                 </div>
@@ -54,7 +51,14 @@
                         <div class="ui-g">
                             <div class="ui-g-12 ui-md-12">
                                 <h1>
-                                    Seleccione una encuesta o cree una nueva
+                                    <c:if test="#{myQuizzesBean.selectedQuiz!=null}">
+                                        <h:outputText id="tituloQuiz" value="#{myQuizzesBean.selectedQuiz.title}"/>
+                                    </c:if>
+
+                                    <c:if test="#{myQuizzesBean.selectedQuiz==null}">
+                                        <h:outputText id="tituloQuiz" value="Seleccione un quiz"/>
+                                    </c:if>
+                                    
                                 </h1>
                                 
                             </div>
@@ -62,23 +66,20 @@
                         <div class="ui-g">
                             <h:form id="botones">
                                 <div class="ui-g-12 ui-md-3">
-                                    <p:commandButton value="Editar encuesta" id="alter" actionListener="#{buttonView.buttonAction}" ajax="false" disabled="#{MyQuizzesBean.selectedQuiz.id==-1}" style="width: 100%" />
+                                    <p:commandButton value="Editar encuesta" id="alter" actionListener="#{buttonView.buttonAction}" ajax="false" disabled="#{myQuizzesBean.selectedQuiz==null}" style="width: 100%" />
                                 </div>
                                 <div class="ui-g-12 ui-md-3">
-                                    <p:commandButton value="Activar/desactivar encuesta" id="enable" actionListener="#{buttonView.buttonAction}" ajax="false" disabled="#{MyQuizzesBean.selectedQuiz.id==-1}" style="width: 100%"/>
+                                    <p:commandButton value="Activar/desactivar encuesta" id="enable" actionListener="#{buttonView.buttonAction}" ajax="false" disabled="#{myQuizzesBean.selectedQuiz==null}" style="width: 100%"/>
 
                                 </div>
                                 <div class="ui-g-12 ui-md-3">
-                                    <p:commandButton value="Ver estadisticas" id="stats" actionListener="#{buttonView.buttonAction}" ajax="false" disabled="#{MyQuizzesBean.selectedQuiz.id==-1}" style="width: 100%"/>
-
+                                    <p:commandButton value="Ver estadisticas" id="stats" actionListener="#{buttonView.buttonAction}" ajax="false" disabled="#{myQuizzesBean.selectedQuiz==null}" style="width: 100%"/>
                                 </div>
                                 <div class="ui-g-12 ui-md-3">
-
-                                    <p:commandButton value="Eliminar encuesta" id="delete" actionListener="#{buttonView.buttonAction}" ajax="false" disabled="#{MyQuizzesBean.selectedQuiz.id==-1}" style="width: 100%"/>
+                                    <p:commandButton value="Eliminar encuesta" id="delete" actionListener="#{buttonView.buttonAction}" ajax="false" disabled="#{myQuizzesBean.selectedQuiz==null}" style="width: 100%"/>
                                 </div>
                             </h:form>
                         </div>
-
 
                     </div>
                 </div>
