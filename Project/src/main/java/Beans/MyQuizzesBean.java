@@ -39,6 +39,8 @@ public class MyQuizzesBean {
         query.setParameter("userId", userId);
         lista = query.getResultList();
         entitymanager.close();
+        selectedQuiz=new Database.Quiz();
+        selectedQuiz.setId(-1);
     }
 
     public List<Quiz> getLista() {
