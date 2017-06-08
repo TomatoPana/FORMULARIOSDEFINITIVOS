@@ -47,46 +47,55 @@
                     </h:panelGrid>
                 </h:form>
             </p:dialog>
-            
-            <p:dialog header="Encuesta: #{QuizAnswerBean.titulo}" widgetVar="quiz" modal="true" >
-                <h:form id="formQuiz">
+            <p:dialog header="Encuesta: #{QuizAnswerBean.titulo}" widgetVar="quiz" id="quiz" modal="true" dynamic="true" >
+                <h:form id="form1" rendered="#{QuizAnswerBean.type==null}">
                     <h:panelGrid columns="1" cellpadding="5" id="panelFormQuiz">
-                        <p:outputLabel rendered="#{QuizAnswerBean.type==null}">Email:</p:outputLabel>
-                        <p:inputText value="#{QuizAnswerBean.email}" rendered="#{QuizAnswerBean.type==null}"/>
-                        <p:commandButton value="Iniciar encuesta" actionListener="#{QuizAnswerBean.next()}" ajax="true" update="formQuiz" rendered="#{QuizAnswerBean.type==null}"></p:commandButton>
-
-                        <p:outputLabel value="#{QuizAnswerBean.now.getQuestion()}" rendered="#{QuizAnswerBean.type=='options' &amp;&amp; QuizAnswerBean.conteo &lt;= QuizAnswerBean.cantidad}"></p:outputLabel>
-                        <p:selectOneRadio id="opt" value="#{QuizAnswerBean.answer}" layout="grid" columns="1" rendered="#{QuizAnswerBean.type=='options' &amp;&amp; QuizAnswerBean.conteo &lt;= QuizAnswerBean.cantidad}">
+                        <p:outputLabel>Email:</p:outputLabel>
+                        <p:inputText value="#{QuizAnswerBean.email}" />
+                        <p:commandButton value="Iniciar encuesta" actionListener="#{QuizAnswerBean.next()}" ajax="true" update="quiz" oncomplete="PF('quiz').show();" ></p:commandButton>
+                    </h:panelGrid>
+                </h:form>
+                <h:form id="form2" rendered="#{QuizAnswerBean.type=='options' &amp;&amp; QuizAnswerBean.conteo &lt;= QuizAnswerBean.cantidad}">
+                    <h:panelGrid columns="1" cellpadding="5" id="panelFormQuiz">
+                        <p:outputLabel value="#{QuizAnswerBean.now.getQuestion()}"></p:outputLabel>
+                        <p:selectOneRadio id="opt" value="#{QuizAnswerBean.answer}" layout="grid" columns="1">
                             <f:selectItems value="#{QuizAnswerBean.options}" var="o" itemLabel="#{o.getName()}" itemValue="#{o.getId()}"/>
                         </p:selectOneRadio>
-                        <p:commandButton value="Siguiente" actionListener="#{QuizAnswerBean.next()}" ajax="true" update="formQuiz panelFormQuiz" rendered="#{QuizAnswerBean.type=='options' &amp;&amp; QuizAnswerBean.conteo &lt;= QuizAnswerBean.cantidad}"></p:commandButton>
-
-                        <p:outputLabel rendered="#{QuizAnswerBean.type=='open' &amp;&amp; QuizAnswerBean.conteo &lt;= QuizAnswerBean.cantidad}" value="#{QuizAnswerBean.now.getQuestion()}"></p:outputLabel>
-                        <p:inputText value="#{QuizAnswerBean.answer}" rendered="#{QuizAnswerBean.type=='open' &amp;&amp; QuizAnswerBean.conteo &lt;= QuizAnswerBean.cantidad}"/>
-                        <p:commandButton value="Siguiente" actionListener="#{QuizAnswerBean.next()}" ajax="true" update="formQuiz panelFormQuiz" rendered="#{QuizAnswerBean.type=='open' &amp;&amp; QuizAnswerBean.conteo &lt;= QuizAnswerBean.cantidad}"></p:commandButton>
-                            
-                        <p:outputLabel rendered="#{QuizAnswerBean.type=='range' &amp;&amp; QuizAnswerBean.conteo &lt;= QuizAnswerBean.cantidad}">#{QuizAnswerBean.now.getQuestion()}</p:outputLabel>
-                        <p:inputNumber id="inputRange" rendered="#{QuizAnswerBean.type=='range' &amp;&amp; QuizAnswerBean.conteo &lt;= QuizAnswerBean.cantidad}" value="#{QuizAnswerBean.answer}" minValue="#{QuizAnswerBean.now.min}" maxValue="#{QuizAnswerBean.now.max}" decimalPlaces="0" />
-                        <p:slider for="inputRange" rendered="#{QuizAnswerBean.type=='range' &amp;&amp; QuizAnswerBean.conteo &lt;= QuizAnswerBean.cantidad}" minValue="#{QuizAnswerBean.now.min}" maxValue="#{QuizAnswerBean.now.max}"/>
-                        <p:commandButton value="Siguiente" actionListener="#{QuizAnswerBean.next()}" ajax="true" update="formQuiz panelFormQuiz" rendered="#{QuizAnswerBean.type=='range' &amp;&amp; QuizAnswerBean.conteo &lt;= QuizAnswerBean.cantidad}"></p:commandButton>
-
-                        <p:outputLabel rendered="#{QuizAnswerBean.conteo &gt; QuizAnswerBean.questions.size()}">Muchas gracias por contestar</p:outputLabel>
-                        <p:commandButton value="Finalizar" actionListener="#{QuizAnswerBean.end()}" onclick="PF('quiz').hide();" ajax="true" update="formQuiz panelFormQuiz" rendered="#{QuizAnswerBean.conteo &gt; QuizAnswerBean.questions.size()}"></p:commandButton>
-                        
+                        <p:commandButton value="Siguiente" actionListener="#{QuizAnswerBean.next()}" ajax="true" update="quiz" oncomplete="PF('quiz').show();" ></p:commandButton>
+                    </h:panelGrid>
+                </h:form>
+                <h:form id="form3" rendered="#{QuizAnswerBean.type=='open' &amp;&amp; QuizAnswerBean.conteo &lt;= QuizAnswerBean.cantidad}" >
+                    <h:panelGrid columns="1" cellpadding="5" id="panelFormQuiz">
+                        <p:outputLabel value="#{QuizAnswerBean.now.getQuestion()}"></p:outputLabel>
+                        <p:inputText value="#{QuizAnswerBean.answer}"/>
+                        <p:commandButton value="Siguiente" actionListener="#{QuizAnswerBean.next()}" ajax="true" update="quiz" oncomplete="PF('quiz').show();" ></p:commandButton>
+                    </h:panelGrid>
+                </h:form>
+                <h:form id="form4" rendered="#{QuizAnswerBean.type=='range' &amp;&amp; QuizAnswerBean.conteo &lt;= QuizAnswerBean.cantidad}">
+                    <h:panelGrid columns="1" cellpadding="5" id="panelFormQuiz">
+                        <p:outputLabel>#{QuizAnswerBean.now.getQuestion()}</p:outputLabel>
+                        <p:inputNumber id="inputRange" value="#{QuizAnswerBean.answer}" minValue="#{QuizAnswerBean.now.min}" maxValue="#{QuizAnswerBean.now.max}" decimalPlaces="0" />
+                        <p:slider for="inputRange" minValue="#{QuizAnswerBean.now.min}" maxValue="#{QuizAnswerBean.now.max}"/>
+                        <p:commandButton value="Siguiente" actionListener="#{QuizAnswerBean.next()}" ajax="true" update="quiz" oncomplete="PF('quiz').show();" ></p:commandButton>
+                    </h:panelGrid>
+                </h:form>
+                <h:form id="form5" rendered="#{QuizAnswerBean.conteo &gt; QuizAnswerBean.questions.size()}">
+                    <h:panelGrid columns="1" cellpadding="5" id="panelFormQuiz">
+                        <p:outputLabel >Muchas gracias por contestar</p:outputLabel>
+                        <p:commandButton value="Finalizar" actionListener="#{QuizAnswerBean.end()}" oncomplete="PF('quiz').hide();" ajax="true" update="quiz" ></p:commandButton>
                     </h:panelGrid>
                 </h:form>
             </p:dialog> 
+            
 
 
 
             <div class="ui-g">
                 <div class="ui-g-12">
                     <h:form id="menuForm">
-                        <p:menubar>
+                        <p:menubar>  
                             <p:menuitem value="Registrarse" url="#"  onclick="PF('signup').show();" icon="ui-icon-pencil"/>
                             <p:menuitem value="Iniciar sesión" url="#" onclick="PF('login').show();" icon="ui-icon-home"/>
-                            <p:menuitem value="Quiz" actionListener="#{QuizAnswerBean.selectedQuiz(1)}" onclick="PF('quiz').show();"  icon="ui-icon-home"/>
-
                         </p:menubar>    
                     </h:form>
 
@@ -102,7 +111,7 @@
                                     <f:selectItems value="#{categoriesBean.category}" />
                                 </p:selectOneMenu>
                             </h:panelGrid>
-                            <p:commandButton value="Filtrar Encuestas" id="ajax" styleClass="ui-priority-primary" />
+                            <p:commandButton value="Filtrar Encuestas" id="ajax" styleClass="ui-priority-primary"  />
                         </p:panel>
                     </h:form>
                     
@@ -113,19 +122,23 @@
                     <div class="ui-g-12 ui-g-nopad">
                         <div class="ui-g">
                             <div class="ui-g-12 ui-md-12">
-                                <p:dataTable var="test" value="#{filterBean.lista}">
-                                    <p:column headerText="Category ID">
-                                        <h:outputText value="#{test.categoryId}" />
-                                    </p:column>
-
-                                    <p:column headerText="Nombre Encuesta">
-                                        <h:outputText value="#{test.title}" />
-                                    </p:column>
-                                </p:dataTable>
-
-                                
-                                
-                                
+                                <h:form>
+                                    <p:dataTable var="test" value="#{filterBean.categorias}">
+                                        
+                                        <p:column headerText="Categoria">
+                                            <h:outputText value="#{test.categoria}" />
+                                        </p:column>
+                                        
+                                        <p:column headerText="Fecha de creación">
+                                            <h:outputText value="#{test.quiz.creationDate}" />
+                                        </p:column>
+                                        
+                                        <p:column headerText="Seleccione una encuesta">
+                                            <p:commandLink value="#{test.quiz.title}" actionListener="#{QuizAnswerBean.selectedQuiz(test.quiz.id)}" oncomplete="PF('quiz').show();" ajax="true" update="quiz"></p:commandLink>
+                                        </p:column>
+                                        
+                                    </p:dataTable>
+                                </h:form>
                             </div>
                         </div>
                     </div>

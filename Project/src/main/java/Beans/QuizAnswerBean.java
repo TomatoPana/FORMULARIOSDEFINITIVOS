@@ -43,7 +43,7 @@ public class QuizAnswerBean {
     private Database.Questions now;
     private String answer;
     private String titulo;
-
+    
     public String getTitulo() {
         return titulo;
     }
@@ -134,6 +134,14 @@ public class QuizAnswerBean {
     
     public void selectedQuiz(int id)
     {
+        this.id=null;
+        email=null;
+        type=null;
+        options=null;
+        questions=null;
+        conteo=0;
+        now=null;
+        answer=null;
         this.id = id;
         EntityManagerFactory emfactory = Persistence.createEntityManagerFactory( "Persistence" );
         EntityManager entitymanager = emfactory.createEntityManager();
@@ -150,6 +158,7 @@ public class QuizAnswerBean {
         
         entitymanager.close();
     }
+    
     public void next()
     {
         if(conteo>0)
