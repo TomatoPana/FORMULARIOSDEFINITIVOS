@@ -6,7 +6,9 @@
 package Beans;
 
 import Database.Categories;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
@@ -22,13 +24,24 @@ public class CategoriesBean {
     
     private List<Database.Categories> lista;
     private Database.Categories selectedCategory;
+    public String categoryName;
+    public Map<String,Map<String,String>> data = new HashMap<String, Map<String,String>>();
+    public Map<String,String> category;
     
     @PostConstruct
     public void init() {
+        
         EntityManagerFactory emfactory = Persistence.createEntityManagerFactory( "Persistence" );
         EntityManager entitymanager = emfactory.createEntityManager();
         Query query = entitymanager.createNamedQuery("Categories.findAll", Categories.class);
         lista = query.getResultList();
+        category = new HashMap<String, String>();
+        for(Database.Categories a: lista)
+        {
+            category.put(a.getName(), a.getName());
+            System.out.println(a.getName());
+        }
+        System.out.println("End-init");
     }
 
     public Categories getSelectedCategory() {
@@ -46,6 +59,32 @@ public class CategoriesBean {
     public void setLista(List<Categories> lista) {
         this.lista = lista;
     }
+
+    public String getCategoryName() {
+        return categoryName;
+    }
+
+    public void setCategoryName(String categoryName) {
+        this.categoryName = categoryName;
+    }
+
+    public Map<String, Map<String, String>> getData() {
+        return data;
+    }
+
+    public void setData(Map<String, Map<String, String>> data) {
+        this.data = data;
+    }
+
+    public Map<String, String> getCategory() {
+        return category;
+    }
+
+    public void setCategory(Map<String, String> category) {
+        this.category = category;
+    }
+    
+    
     
     /**
      * Creates a new instance of CategoriesBean

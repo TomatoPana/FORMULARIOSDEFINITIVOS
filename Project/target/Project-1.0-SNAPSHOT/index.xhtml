@@ -93,12 +93,18 @@
 
                 </div>
                 <div class="ui-g-12 ui-md-2">
-                    <p:dataList value="#{categoriesBean.lista}" var="category" type="ordered" itemType="none" paginator="true" styleClass="paginated">
-                        <f:facet name="header">
-                            Lista de Categorias
-                        </f:facet>
-                        <h:outputText value="#{category.name}" style="display:inline-block"/>
-                    </p:dataList>
+                    <h:form>
+                        <p:panel header="Filtro de Busqueda" style="margin-bottom: 10px;">
+                            <h:panelGrid columns="1">
+                                <p:outputLabel for="categoryList" value="Categoria: "/>
+                                <p:selectOneMenu id="categoryList" value="#{categoriesBean.categoryName}" style="width:200px;">
+                                    <f:selectItem itemLabel="Selecciona una categoria" itemValue="" noSelectionOption="true" />
+                                    <f:selectItems value="#{categoriesBean.category}" />
+                                </p:selectOneMenu>
+                            </h:panelGrid>
+                            <p:commandButton value="Filtrar Encuestas" id="ajax" styleClass="ui-priority-primary" />
+                        </p:panel>
+                    </h:form>
                     
 
                 </div>
@@ -106,18 +112,18 @@
                     <!-- TODO EL CONTENIDO -->
                     <div class="ui-g-12 ui-g-nopad">
                         <div class="ui-g">
-                            <div class="ui-g-12 ui-md-4">
+                            <div class="ui-g-12 ui-md-12">
+                                <p:dataTable var="test" value="#{FilterBean.lista}">
+                                    <p:column headerText="Category ID">
+                                        <h:outputText value="#{test.categoryId}" />
+                                    </p:column>
 
+                                    <p:column headerText="Nombre Encuesta">
+                                        <h:outputText value="#{test.title}" />
+                                    </p:column>
+                                </p:dataTable>
 
                             </div>
-                            <div class="ui-g-12 ui-md-4">Maecenas vel nisi aliquet, vulputate tortor id, laoreet massa. Maecenas mattis tristique bibendum. Suspendisse vel mi dictum, vestibulum lacus quis, pulvinar quam. Proin vulputate, nibh at finibus varius, leo eros lacinia elit, nec blandit odio tellus a justo. Donec nec ex auctor, tristique nulla nec, rutrum sapien.</div>
-                            <div class="ui-g-12 ui-md-4">Proin efficitur in leo eget ornare. Nam vestibulum neque sed velit sagittis sodales. Sed scelerisque hendrerit magna a hendrerit. Cras tempor sem at justo pharetra convallis. Curabitur vel sodales purus. Vestibulum interdum facilisis nulla imperdiet suscipit. Quisque lectus felis, condimentum eget hendrerit sit amet.</div>
-                        </div>
-
-
-                        <div class="ui-g">
-                            <div class="ui-g-12 ui-md-6">Phasellus faucibus purus volutpat mauris lacinia sodales. Ut sit amet sapien facilisis, commodo dui non, fringilla tellus. Quisque tempus facilisis nisi sodales finibus. Pellentesque neque orci, ullamcorper vitae ligula quis, dignissim euismod augue.</div>
-                            <div class="ui-g-12 ui-md-6">Fusce ullamcorper congue massa, eget ullamcorper nunc lobortis egestas. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque ultrices dui eget dolor feugiat dapibus. Aliquam pretium leo et egestas luctus. Nunc facilisis gravida tellus.</div>
                         </div>
                     </div>
                 </div>
