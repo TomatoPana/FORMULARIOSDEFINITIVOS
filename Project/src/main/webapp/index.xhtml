@@ -56,21 +56,23 @@
                                     <f:selectItems value="#{categoriesBean.category}" />
                                 </p:selectOneMenu>
                             </h:panelGrid>
+                            <p:commandButton value="Filtrar Encuestas" id="ajax" styleClass="ui-priority-primary" />
                         </p:panel>
                     </h:form>
                     
                 </p:layoutUnit>
 
                 <p:layoutUnit position="center" id="centerPos">
-                    <!--Lista de Categorias-->
-                    <p:dataList value="#{FilterBean.lista}"  type="ordered" itemType="none" paginator="true" styleClass="paginated">
-                        <f:facet name="header">
-                            Lista de Encuestas
-                        </f:facet>
-                        <h:outputText value="#{Quiz.title}" style="display:inline-block"/>
-                    </p:dataList>
-                    
-                    Hola mundo lml
+                    <!--Lista de Categorias en Tabla-->
+                    <p:dataTable var="test" value="#{FilterBean.lista}">
+                        <p:column headerText="Category ID">
+                            <h:outputText value="#{test.categoryId}" />
+                        </p:column>
+                        
+                        <p:column headerText="Nombre Encuesta">
+                            <h:outputText value="#{test.title}" />
+                        </p:column>
+                    </p:dataTable>
                     <h:form>
                         <p:menuitem value="Save" actionListener="#{bean.save}"/>    
                         <p:menuitem value="Delete" actionListener="#{bean.delete}"/>    
