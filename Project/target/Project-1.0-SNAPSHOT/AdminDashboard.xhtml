@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:pe="http://primefaces.org/ui/extensions"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <h:head>
+        <f:facet name="Dashboard">
+            <meta content='text/html; charset=UTF-8' http-equiv="Content-Type"/>
+            <title>PrimeFaces</title>
+        </f:facet>
+    </h:head>
+    <h:body>
+        <div class="ui-g">
+                <div class="ui-g-12">
+                    <h:form id="menuForm">
+                        <p:menubar>  
+                            <p:menuitem value="Registrarse" url="#"  onclick="PF('signup').show();" icon="ui-icon-pencil"/>
+                            <p:menuitem value="Iniciar sesión" url="#" onclick="PF('login').show();" icon="ui-icon-home"/>
+                        </p:menubar>    
+                    </h:form>
+
+
+                </div>
+                <div class="ui-g-12 ui-md-2">
+                    <h:form>
+                        <p:panel header="Filtro de Busqueda" style="margin-bottom: 10px;">
+                            <h:panelGrid columns="1">
+                                <p:outputLabel for="categoryList" value="Categoria: "/>
+                                <p:selectOneMenu id="categoryList" value="#{categoriesBean.categoryName}" style="width:200px;">
+                                    <f:selectItem itemLabel="Selecciona una categoria" itemValue="" noSelectionOption="true" />
+                                    <f:selectItems value="#{categoriesBean.category}" />
+                                </p:selectOneMenu>
+                            </h:panelGrid>
+                            <p:commandButton value="Filtrar Encuestas" id="ajax" styleClass="ui-priority-primary"  />
+                        </p:panel>
+                    </h:form>
+                    
+
+                </div>
+                <div class="ui-g-12 ui-md-10 ui-g-nopad">
+                    <!-- TODO EL CONTENIDO -->
+                    <div class="ui-g-12 ui-g-nopad">
+                        <div class="ui-g">
+                            <div class="ui-g-12 ui-md-12">
+                                <h:form>
+                                    <p:dataTable var="test" value="#{filterBean.categorias}">
+                                        <p:column headerText="Categoria">
+                                            <h:outputText value="#{test.categoria}" />
+                                        </p:column>
+                                        
+                                        <p:column headerText="Fecha de creación">
+                                            <h:outputText value="#{test.quiz.creationDate}" />
+                                        </p:column>
+                                        
+                                        <p:column headerText="Seleccione una encuesta">
+                                            <p:commandLink value="#{test.quiz.title}" actionListener="#{QuizAnswerBean.selectedQuiz(test.quiz.id)}" oncomplete="PF('quiz').show();" ajax="true" update="quiz"></p:commandLink>
+                                        </p:column>
+                                    </p:dataTable>
+                                </h:form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>  
+    </h:body>
+</html>
