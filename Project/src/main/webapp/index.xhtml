@@ -3,7 +3,9 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:f="http://java.sun.com/jsf/core"
-      xmlns:p="http://primefaces.org/ui">
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:pe="http://primefaces.org/ui/extensions"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
 
     <f:view contentType="text/html">
         <h:head>
@@ -44,30 +46,46 @@
                         <p:commandButton value="Registro" actionListener="#{RegistroBean.registro}" ajax="true"></p:commandButton>           
                     </h:panelGrid>
                 </h:form>
-            </p:dialog>   
+            </p:dialog>
             
-            <p:dialog header="Iniciar sesion" widgetVar="login" modal="true" id='loginModal'>
-                <h:outputText value="#{param['error']!=null?'Porfavor vuelva a intentarlo':null}" />
-                <h:form id="login" >
-                    <h:panelGrid columns="2" cellpadding="5" id="dynaFormGroup">
-                        <pe:dynaForm>
+            <p:dialog header="Encuesta: #{QuizAnswerBean.titulo}" widgetVar="quiz" modal="true" >
+                <h:form id="formQuiz">
+                    <h:panelGrid columns="1" cellpadding="5" id="panelFormQuiz">
+                        <p:outputLabel rendered="#{QuizAnswerBean.type==null}">Email:</p:outputLabel>
+                        <p:inputText value="#{QuizAnswerBean.email}" rendered="#{QuizAnswerBean.type==null}"/>
+                        <p:commandButton value="Iniciar encuesta" actionListener="#{QuizAnswerBean.next()}" ajax="true" update="formQuiz" rendered="#{QuizAnswerBean.type==null}"></p:commandButton>
+
+                        <p:outputLabel value="#{QuizAnswerBean.now.getQuestion()}" rendered="#{QuizAnswerBean.type=='options' &amp;&amp; QuizAnswerBean.conteo &lt;= QuizAnswerBean.cantidad}"></p:outputLabel>
+                        <p:selectOneRadio id="opt" value="#{QuizAnswerBean.answer}" layout="grid" columns="1" rendered="#{QuizAnswerBean.type=='options' &amp;&amp; QuizAnswerBean.conteo &lt;= QuizAnswerBean.cantidad}">
+                            <f:selectItems value="#{QuizAnswerBean.options}" var="o" itemLabel="#{o.getName()}" itemValue="#{o.getId()}"/>
+                        </p:selectOneRadio>
+                        <p:commandButton value="Siguiente" actionListener="#{QuizAnswerBean.next()}" ajax="true" update="formQuiz panelFormQuiz" rendered="#{QuizAnswerBean.type=='options' &amp;&amp; QuizAnswerBean.conteo &lt;= QuizAnswerBean.cantidad}"></p:commandButton>
+
+                        <p:outputLabel rendered="#{QuizAnswerBean.type=='open' &amp;&amp; QuizAnswerBean.conteo &lt;= QuizAnswerBean.cantidad}" value="#{QuizAnswerBean.now.getQuestion()}"></p:outputLabel>
+                        <p:inputText value="#{QuizAnswerBean.answer}" rendered="#{QuizAnswerBean.type=='open' &amp;&amp; QuizAnswerBean.conteo &lt;= QuizAnswerBean.cantidad}"/>
+                        <p:commandButton value="Siguiente" actionListener="#{QuizAnswerBean.next()}" ajax="true" update="formQuiz panelFormQuiz" rendered="#{QuizAnswerBean.type=='open' &amp;&amp; QuizAnswerBean.conteo &lt;= QuizAnswerBean.cantidad}"></p:commandButton>
                             
-                        </pe:dynaForm>
-                        <p:outputLabel>Correo: </p:outputLabel>
-                        <p:inputText value="#{answerQuizz.email}" />
-                        <p:commandButton value="Iniciar Sesión" actionListener="#{LoginBean.next()}" ajax="true" ></p:commandButton>
+                        <p:outputLabel rendered="#{QuizAnswerBean.type=='range' &amp;&amp; QuizAnswerBean.conteo &lt;= QuizAnswerBean.cantidad}">#{QuizAnswerBean.now.getQuestion()}</p:outputLabel>
+                        <p:inputNumber id="inputRange" rendered="#{QuizAnswerBean.type=='range' &amp;&amp; QuizAnswerBean.conteo &lt;= QuizAnswerBean.cantidad}" value="#{QuizAnswerBean.answer}" minValue="#{QuizAnswerBean.now.min}" maxValue="#{QuizAnswerBean.now.max}" decimalPlaces="0" />
+                        <p:slider for="inputRange" rendered="#{QuizAnswerBean.type=='range' &amp;&amp; QuizAnswerBean.conteo &lt;= QuizAnswerBean.cantidad}" minValue="#{QuizAnswerBean.now.min}" maxValue="#{QuizAnswerBean.now.max}"/>
+                        <p:commandButton value="Siguiente" actionListener="#{QuizAnswerBean.next()}" ajax="true" update="formQuiz panelFormQuiz" rendered="#{QuizAnswerBean.type=='range' &amp;&amp; QuizAnswerBean.conteo &lt;= QuizAnswerBean.cantidad}"></p:commandButton>
+
+                        <p:outputLabel rendered="#{QuizAnswerBean.conteo &gt; QuizAnswerBean.questions.size()}">Muchas gracias por contestar</p:outputLabel>
+                        <p:commandButton value="Finalizar" actionListener="#{QuizAnswerBean.end()}" onclick="PF('quiz').hide();" ajax="true" update="formQuiz panelFormQuiz" rendered="#{QuizAnswerBean.conteo &gt; QuizAnswerBean.questions.size()}"></p:commandButton>
+                        
                     </h:panelGrid>
                 </h:form>
+            </p:dialog> 
 
-            </p:dialog>  
 
 
             <div class="ui-g">
                 <div class="ui-g-12">
-                    <h:form>
+                    <h:form id="menuForm">
                         <p:menubar>
                             <p:menuitem value="Registrarse" url="#"  onclick="PF('signup').show();" icon="ui-icon-pencil"/>
                             <p:menuitem value="Iniciar sesión" url="#" onclick="PF('login').show();" icon="ui-icon-home"/>
+                            <p:menuitem value="Quiz" actionListener="#{QuizAnswerBean.selectedQuiz(1)}" onclick="PF('quiz').show();"  icon="ui-icon-home"/>
 
                         </p:menubar>    
                     </h:form>

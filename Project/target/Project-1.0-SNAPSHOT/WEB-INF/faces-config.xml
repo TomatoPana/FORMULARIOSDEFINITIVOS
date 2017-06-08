@@ -35,4 +35,8 @@
         <managed-bean-class>Beans.MyQuizzesBean</managed-bean-class>
         <managed-bean-scope>view</managed-bean-scope>
     </managed-bean>
+    <managed-bean>
+        <managed-bean-name>QuizAnswerBean</managed-bean-name>
+        <managed-bean-class>Beans.QuizAnswerBean</managed-bean-class>
+        <managed-bean-scope>view</managed-bean-scope></managed-bean>
 </faces-config>
