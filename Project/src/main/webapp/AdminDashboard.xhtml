@@ -18,32 +18,77 @@ and open the template in the editor.
         </f:facet>
     </h:head>
     <h:body>
+        <p:dialog header="Registrarse" widgetVar="signup" modal="true" >
+            <h:form>
+                <p:messages id="signUpMessagge" showDetail="true" autoUpdate="true" closable="true" />
+                <h:panelGrid columns="2" cellpadding="5">
+                    <p:outputLabel>Nombre:</p:outputLabel>
+                    <p:inputText value="#{RegistroAdminBean.nombre}" />
+                    <p:outputLabel>correo:</p:outputLabel>
+                    <p:inputText value="#{RegistroAdminBean.email}" />
+                    <p:outputLabel>Contraseña:</p:outputLabel>
+                    <p:password value="#{RegistroAdminBean.password}" />
+                    <p:outputLabel>Confirmar contraseña:</p:outputLabel>
+                    <p:password value="#{RegistroAdminBean.confirmPassword}" />
+                    <p:commandButton value="Registro" actionListener="#{RegistroAdminBean.registro}" ajax="true"></p:commandButton>           
+                </h:panelGrid>
+            </h:form>
+        </p:dialog>
         <div class="ui-g">
                 <div class="ui-g-12">
                     <h:form id="menuForm">
                         <p:menubar>  
-                            <p:menuitem value="Registrarse" url="#"  onclick="PF('signup').show();" icon="ui-icon-pencil"/>
-                            <p:menuitem value="Iniciar sesión" url="#" onclick="PF('login').show();" icon="ui-icon-home"/>
+                            <p:menuitem value="Registrar nuevo administrador" url="#"  onclick="PF('signup').show();" icon="ui-icon-pencil"/>
+                            <p:menuitem value="Cerrar Sesión" actionListener="#{LoginBean.logout()}" icon="ui-icon-home" ajax="false"/>
                         </p:menubar>    
-                    </h:form>
-
-
-                </div>
-                <div class="ui-g-12 ui-md-2">
-                    <h:form>
-                        <p:panel header="Filtro de Busqueda" style="margin-bottom: 10px;">
-                            <h:panelGrid columns="1">
-                                <p:outputLabel for="categoryList" value="Categoria: "/>
-                                <p:selectOneMenu id="categoryList" value="#{categoriesBean.categoryName}" style="width:200px;">
-                                    <f:selectItem itemLabel="Selecciona una categoria" itemValue="" noSelectionOption="true" />
-                                    <f:selectItems value="#{categoriesBean.category}" />
-                                </p:selectOneMenu>
-                            </h:panelGrid>
-                            <p:commandButton value="Filtrar Encuestas" id="ajax" styleClass="ui-priority-primary"  />
-                        </p:panel>
+                        
                     </h:form>
                     
+                </div>
+                <div class="ui-g-12 ui-md-2">
+                    <h2><h:outputText value="Seleccione un usuario"/></h2>
+                    <h:form>
+                        <p:selectOneMenu id="usuario" 
+                         effect="fade" var="us" filter="true" value="#{usersBean.usuario}" filterMatchMode="startsWith" converter="userConverter">
+                            <f:selectItems value="#{usersBean.usuarios}" var="user" itemLabel="#{user.email} - #{user.nombre}" itemValue="#{user}"/>
+                            <p:ajax listener="#{usersBean.updateQuiz()}" update="selectQuiz formEliminarUsuario"/>
+                            <p:column style="width:10%">
+                            </p:column>
 
+                            <p:column>
+                                #{us.email} - #{us.nombre}
+                            </p:column>
+                        </p:selectOneMenu>
+                        
+                    </h:form>
+                    <h:form id="formEliminarUsuario">
+                        <p:commandButton value="Eliminar Usuario"  disabled="#{usersBean.usuario.id==-55}" actionListener="#{usersBean.deleteUser}"/>
+                    </h:form>
+                    
+                </div>
+                
+                <div class="ui-g-12 ui-md-2">
+                    <h2><h:outputText value="Seleccione una encuesta"/></h2>
+                    <h:form id="selectQuiz">
+                        <p:selectOneMenu converter="quizConverter"
+                            effect="fade" var="qu" filter="true" value="#{usersBean.myQuiz}" filterMatchMode="startsWith">
+                            
+                            <f:selectItem itemLabel="Encuestas de #{usersBean.myQuiz.id==-55?'todos':usersBean.usuario.nombre}" itemValue="#{usersBean.myQuiz}" noSelectionOption="true" />
+                            <p:ajax update="formEliminarQuiz "/>
+                            <f:selectItems value="#{usersBean.quiz}" var="q" itemLabel="#{q.title}" itemValue="#{q}" />
+                            <p:column style="width:10%">
+                            </p:column>
+
+                            <p:column>
+                                #{qu.title}
+                            </p:column>
+                        </p:selectOneMenu>
+                        
+                            <h:form id="formEliminarQuiz">
+                                <p:commandButton value="Eliminar quiz"  disabled="#{usersBean.myQuiz.id==-55}" action="#{usersBean.deleteQuiz}"/>
+                            </h:form>
+                        
+                    </h:form>
                 </div>
                 <div class="ui-g-12 ui-md-10 ui-g-nopad">
                     <!-- TODO EL CONTENIDO -->
@@ -52,17 +97,7 @@ and open the template in the editor.
                             <div class="ui-g-12 ui-md-12">
                                 <h:form>
                                     <p:dataTable var="test" value="#{filterBean.categorias}">
-                                        <p:column headerText="Categoria">
-                                            <h:outputText value="#{test.categoria}" />
-                                        </p:column>
-                                        
-                                        <p:column headerText="Fecha de creación">
-                                            <h:outputText value="#{test.quiz.creationDate}" />
-                                        </p:column>
-                                        
-                                        <p:column headerText="Seleccione una encuesta">
-                                            <p:commandLink value="#{test.quiz.title}" actionListener="#{QuizAnswerBean.selectedQuiz(test.quiz.id)}" oncomplete="PF('quiz').show();" ajax="true" update="quiz"></p:commandLink>
-                                        </p:column>
+                                       
                                     </p:dataTable>
                                 </h:form>
                             </div>

@@ -1,3 +1,4 @@
+package Beans;
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -6,6 +7,7 @@
 import Database.Users;
 import java.util.Collection;
 import java.util.Date;
+import javax.faces.application.FacesMessage;
 import javax.inject.Named;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
@@ -97,52 +99,49 @@ public class RegistroAdminBean {
     
     
     public String registro() {
-        //if(password != confirmPassword){
-        //    System.out.println("contraseñas diferentes");
-        //    return null;
-        //}
-        System.out.println("hola");
         FacesContext context = FacesContext.getCurrentInstance();
         EntityManagerFactory emfactory = Persistence.createEntityManagerFactory( "Persistence" );
         EntityManager entitymanager = emfactory.createEntityManager();
         String result = (String) context.getExternalContext().getSessionMap().get("user");
-        if(result != null) {
-            System.out.println(result);
-            return "userhome?faces-redirect=true";
-        }
-        else {
-        Users user = new Users();
-        Query query = entitymanager.createNamedQuery("Users.findByEmail", Users.class);
-        query.setParameter("email", this.email);
-        Collection<Users> results = query.getResultList();
-        for(Users x : results)
-        {
-            System.out.println(x.getEmail());
-        }
-        if (results.size() > 0) {
-            
-            nombre = null;
-            password = null;
-            confirmPassword = null;
-            email = null;
-            id = 0;
-            dateTime = null;
-            return "/forms/faces/registro.xhtml?error=existe";
-        } else {
-            System.out.println("Nuevo ingreso");
-            entitymanager.getTransaction().begin();
-            Users usuario = new Users();
-            usuario.setNombre(nombre);
-            usuario.setEmail(email);
-            usuario.setId(id);
-            usuario.setPassword(password);
-            usuario.setTipo((short) 1);
-            usuario.setDateTime(new Date());
-            entitymanager.persist(usuario);
-            entitymanager.getTransaction().commit();
-            entitymanager.close();
-            return "/forms/";
-        }
+
+            Users user = new Users();
+            Query query = entitymanager.createNamedQuery("Users.findByEmail", Users.class);
+            query.setParameter("email", this.email);
+            Collection<Users> results = query.getResultList();
+            for(Users x : results)
+            {
+                System.out.println(x.getEmail());
+            }
+            if (results.size() > 0) {
+
+                nombre = null;
+                password = null;
+                confirmPassword = null;
+                email = null;
+                id = 0;
+                dateTime = null;
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Error", "Usuario previamente registrado"));
+                return "/forms/faces/registro.xhtml?error=existe";
+            } else if(!password.equals(confirmPassword))
+            {
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Error", "Porfavor revise que las contraseñas coincidan"));
+                return null;
+            }
+            else
+            {
+                entitymanager.getTransaction().begin();
+                Users usuario = new Users();
+                usuario.setNombre(nombre);
+                usuario.setEmail(email);
+                usuario.setId(id);
+                usuario.setPassword(password);
+                usuario.setTipo((short) 1);
+                usuario.setDateTime(new Date());
+                entitymanager.persist(usuario);
+                entitymanager.getTransaction().commit();
+                entitymanager.close();
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Listo", "Usuario registrado"));
+                return null;
         }
     }
     

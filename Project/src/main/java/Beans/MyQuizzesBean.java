@@ -36,7 +36,8 @@ public class MyQuizzesBean {
     public void initialize() {
         FacesContext context = FacesContext.getCurrentInstance();
         Integer userId = (Integer) context.getExternalContext().getSessionMap().get("id");
-        if(userId != null)
+        Short type = (Short) context.getExternalContext().getSessionMap().get("type");
+        if(userId != null && type==0)
         {
             EntityManagerFactory emfactory = Persistence.createEntityManagerFactory( "Persistence" );
             EntityManager entitymanager = emfactory.createEntityManager();

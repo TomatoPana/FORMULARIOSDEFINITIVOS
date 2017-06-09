@@ -39,9 +39,8 @@ public class CategoriesBean {
         for(Database.Categories a: lista)
         {
             category.put(a.getName(), a.getName());
-            System.out.println(a.getName());
         }
-        System.out.println("End-init");
+        entitymanager.close();
     }
 
     public Categories getSelectedCategory() {

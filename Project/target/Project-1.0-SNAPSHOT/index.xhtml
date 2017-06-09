@@ -124,7 +124,6 @@
                             <div class="ui-g-12 ui-md-12">
                                 <h:form>
                                     <p:dataTable var="test" value="#{filterBean.categorias}">
-                                        
                                         <p:column headerText="Categoria">
                                             <h:outputText value="#{test.categoria}" />
                                         </p:column>
@@ -136,7 +135,6 @@
                                         <p:column headerText="Seleccione una encuesta">
                                             <p:commandLink value="#{test.quiz.title}" actionListener="#{QuizAnswerBean.selectedQuiz(test.quiz.id)}" oncomplete="PF('quiz').show();" ajax="true" update="quiz"></p:commandLink>
                                         </p:column>
-                                        
                                     </p:dataTable>
                                 </h:form>
                             </div>
@@ -144,11 +142,6 @@
                     </div>
                 </div>
             </div>  
-                
-                
-
-
-            
         </h:body>
 
     </f:view>

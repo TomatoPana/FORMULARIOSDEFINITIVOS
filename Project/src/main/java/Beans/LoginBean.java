@@ -85,10 +85,22 @@ public class LoginBean {
             context.getExternalContext().getSessionMap().put("user", username);
             Database.Users usuario = (Database.Users) results.get(0);
             context.getExternalContext().getSessionMap().put("id", usuario.getId());
-            try {
-                context.getExternalContext().redirect("/forms/faces/dashboard.xhtml");
-            } catch (IOException ex) {
-                Logger.getLogger(LoginBean.class.getName()).log(Level.SEVERE, null, ex);
+            context.getExternalContext().getSessionMap().put("type", usuario.getTipo());
+            if(usuario.getTipo() == 0)
+            {
+                try {
+                    context.getExternalContext().redirect("/forms/faces/dashboard.xhtml");
+                } catch (IOException ex) {
+                    Logger.getLogger(LoginBean.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            else
+            {
+                try {
+                    context.getExternalContext().redirect("/forms/faces/AdminDashboard.xhtml");
+                } catch (IOException ex) {
+                    Logger.getLogger(LoginBean.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
             return "/forms/faces/dashboard/";
         }
@@ -98,6 +110,7 @@ public class LoginBean {
         FacesContext context = FacesContext.getCurrentInstance();
         context.getExternalContext().getSessionMap().remove("user");
         context.getExternalContext().getSessionMap().remove("id");
+        context.getExternalContext().getSessionMap().remove("type");
         try {
                 context.getExternalContext().redirect("/forms");
             } catch (IOException ex) {
