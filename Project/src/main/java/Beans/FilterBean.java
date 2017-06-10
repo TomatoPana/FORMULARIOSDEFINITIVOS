@@ -10,6 +10,7 @@ import Database.Quiz;
 import Extra.QuizzesPlusCategories;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
@@ -31,7 +32,29 @@ public class FilterBean {
     
     private List<Database.Quiz> lista;
     private List<QuizzesPlusCategories> categorias;
-
+    private List<QuizzesPlusCategories> filteredCategorias;
+    
+    public List<QuizzesPlusCategories> getFilteredCategorias(){
+        return filteredCategorias;
+    }
+    
+    public void setFilteredCategorias(List<QuizzesPlusCategories> filteredCategorias){
+        this.filteredCategorias = filteredCategorias;
+    }
+    
+        public void filterBy(Object value, Object filter, Locale locale) {
+//        String filterText = (filter == null) ? null : filter.toString().trim();
+//        if(filterText == null||filterText.equals("")) {
+//            return true;
+//        }
+//         
+//        if(value == null) {
+//            return false;
+//        }
+//         
+//        return ((Comparable) value).compareTo(Integer.valueOf(filterText)) > 0;
+        System.out.println("hola a todos");
+    }
     
     private List<Categories> cat;
     private Database.Quiz selectedCategory;
