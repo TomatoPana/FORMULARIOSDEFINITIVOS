@@ -17,12 +17,13 @@
             <p:dialog header="Nueva encuesta" widgetVar="nueva" modal="true" >
                 <h:form>
                     <h:panelGrid columns="1" cellpadding="5">
-                        <h:form>
-                            <p:inputText placeholder="Titulo encuesta" value="#{myQuizzesBean.newQuizTitle}"></p:inputText>
-                            <p:inputText placeholder="Categoria de la encuesta" value="#{myQuizzesBean.newQuizCategory}"></p:inputText>
-                            <p:commandButton value="Registro" ajax="true" actionListener="#{myQuizzesBean.newQuiz}"></p:commandButton>           <!--ACTION LISTENER-->
-                        </h:form>
-                        
+                        <p:inputText placeholder="Titulo encuesta" value="#{myQuizzesBean.newQuizTitle}"></p:inputText>
+                        <p:outputLabel for="category" value="Categoria " />
+                        <p:selectOneMenu id="category" value="#{MyQuizzesBean.newQuizCategory}" effect="fold" editable="true">
+                            <f:selectItem itemLabel="Select One" itemValue="#{null}" />
+                            <f:selectItems value="#{MyQuizzesBean.allCategories}"/>
+                        </p:selectOneMenu>
+                        <p:commandButton value="Registro" ajax="true" actionListener="#{myQuizzesBean.newQuiz(MyQuizzesBean.newQuizCategory)}"></p:commandButton>           <!--ACTION LISTENER-->
                     </h:panelGrid>
                 </h:form>
             </p:dialog>  
@@ -98,10 +99,10 @@
                                     <p:commandButton value="Agregar pregunta de rango" id="range" actionListener="#{buttonView.buttonAction}" ajax="false" disabled="#{myQuizzesBean.selectedQuiz==null}" style="width: 100%"/>
                                 </div>
                                 <div class="ui-g-12 ui-md-3">
-                                    <p:commandButton value="Activar/desactivar encuesta" id="enable" actionListener="#{buttonView.buttonAction}" ajax="false" disabled="#{myQuizzesBean.selectedQuiz==null}" style="width: 100%"/>
+                                    <p:commandButton value="#{myQuizzesBean.selectedQuiz.enabled?'Desactivar Encuesta':'Activar Encuesta'}" id="enable" actionListener="#{myQuizzesBean.changeState}" update="botones" ajax="true" disabled="#{myQuizzesBean.selectedQuiz==null}" style="width: 100%"/>
                                 </div>
                                 <div class="ui-g-12 ui-md-3">
-                                    <p:commandButton value="Eliminar encuesta" id="delete" actionListener="#{buttonView.buttonAction}" ajax="false" disabled="#{myQuizzesBean.selectedQuiz==null}" style="width: 100%"/>
+                                    <p:commandButton value="Eliminar encuesta" id="delete" actionListener="#{myQuizzesBean.dropQuiz}" ajax="false" disabled="#{myQuizzesBean.selectedQuiz==null}" style="width: 100%"/>
                                 </div>
                             </h:form>
                         </div>

@@ -10,6 +10,7 @@ import Database.Questions;
 import Database.Quiz;
 import Database.Users;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
@@ -37,6 +38,16 @@ public class MyQuizzesBean {
     private Database.Questions miPregunta;
     private String newQuizTitle;
     private String newQuizCategory;
+    private List<String> allCategories;
+
+    public List<String> getAllCategories() {
+        return allCategories;
+    }
+
+    public void setAllCategories(List<String> allCategories) {
+        this.allCategories = allCategories;
+    }
+
 
     public String getNewQuizCategory() {
         return newQuizCategory;
@@ -73,6 +84,7 @@ public class MyQuizzesBean {
     
     @PostConstruct
     public void initialize() {
+        allCategories = new ArrayList<String>();
         FacesContext context = FacesContext.getCurrentInstance();
         Integer userId = (Integer) context.getExternalContext().getSessionMap().get("id");
         if(userId != null)
@@ -82,6 +94,13 @@ public class MyQuizzesBean {
             Query query = entitymanager.createNamedQuery("Quiz.findByUserId", Quiz.class);
             query.setParameter("userId", userId);
             lista = query.getResultList();
+            query = entitymanager.createNamedQuery("Categories.findAll", Categories.class);
+            List<Categories> a = query.getResultList();
+            
+            for(Categories b: a)
+            {
+                allCategories.add(b.getName());
+            }
             entitymanager.close();
         }
         else
@@ -127,19 +146,32 @@ public class MyQuizzesBean {
         entitymanager.close();
     }
     
-    public void newQuiz()
+    public void newQuiz(String newQuizCategory)
     {
         FacesContext context = FacesContext.getCurrentInstance();
         EntityManagerFactory emfactory = Persistence.createEntityManagerFactory( "Persistence" );
         EntityManager entitymanager = emfactory.createEntityManager();
-        Integer userId = (Integer) context.getExternalContext().getSessionMap().get("id");
         entitymanager.getTransaction().begin();
-        Categories c = new Categories();
-        c.setName(newQuizCategory);
-        entitymanager.persist(c);
-        entitymanager.flush();
-        Integer id = c.getId();
-        entitymanager.getTransaction().commit();
+        Boolean existe = false;
+        Integer id = 0;
+        Integer userId = (Integer) context.getExternalContext().getSessionMap().get("id");
+        Query query = entitymanager.createNamedQuery("Categories.findAll", Categories.class);
+        List<Categories> a = query.getResultList();
+        for(Categories x : a)
+        {
+            if(x.getName().equals(newQuizCategory)){
+                existe = true;
+                id = x.getId();
+            }
+        }
+        if(!existe)
+        {
+            Categories c = new Categories();
+            c.setName(newQuizCategory);
+            entitymanager.persist(c);
+            entitymanager.flush();
+            id = c.getId();
+        }
         Quiz q = new Quiz();
         q.setTitle(newQuizTitle);
         q.setCategoryId(id);
@@ -150,15 +182,40 @@ public class MyQuizzesBean {
         entitymanager.persist(q);
         entitymanager.getTransaction().commit();
         entitymanager.close();
-        /*q.set
-        entitymanager.persist(usuario);
-        entitymanager.getTransaction().commit();
-        entitymanager.close();
         try {
-            context.getExternalContext().redirect("/forms");
+            context.getExternalContext().redirect("/forms/faces/dashboard.xhtml");
         } catch (IOException ex) {
             Logger.getLogger(LoginBean.class.getName()).log(Level.SEVERE, null, ex);
-        }*/
+        }
+    }
+    
+    public void dropQuiz()
+    {
+        FacesContext context = FacesContext.getCurrentInstance();
+        EntityManagerFactory emfactory = Persistence.createEntityManagerFactory( "Persistence" );
+        EntityManager entitymanager = emfactory.createEntityManager();
+        entitymanager.getTransaction().begin();
+        Query query = entitymanager.createQuery("Delete FROM Quiz q WHERE q.id =" + selectedQuiz.getEnabled());
+        selectedQuiz = entitymanager.merge(selectedQuiz);
+        entitymanager.remove(selectedQuiz);
+        entitymanager.getTransaction().commit();
+        try {
+            context.getExternalContext().redirect("/forms/faces/dashboard.xhtml");
+        } catch (IOException ex) {
+            Logger.getLogger(LoginBean.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public void changeState()
+    {
+        EntityManagerFactory emfactory = Persistence.createEntityManagerFactory( "Persistence" );
+        EntityManager entitymanager = emfactory.createEntityManager();
+        entitymanager.getTransaction().begin();
+        selectedQuiz.setEnabled(!selectedQuiz.getEnabled());
+        
+        Query query = entitymanager.createQuery("Update Quiz q SET q.enabled = " + selectedQuiz.getEnabled() + " WHERE q.id =" + selectedQuiz.getId());
+        System.out.println("UPDATE: "+query.executeUpdate());
+        entitymanager.getTransaction().commit();
     }
     
     /**
