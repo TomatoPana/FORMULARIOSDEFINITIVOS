@@ -39,6 +39,7 @@ and open the template in the editor.
                     <h:form id="menuForm">
                         <p:menubar>  
                             <p:menuitem value="Registrar nuevo administrador" url="#"  onclick="PF('signup').show();" icon="ui-icon-pencil"/>
+                            <p:menuitem value="Ir a mi dashboard de usuario" actionListener="#{usersBean.myDash}" icon="ui-icon-home" ajax="false"/>
                             <p:menuitem value="Cerrar Sesión" actionListener="#{LoginBean.logout()}" icon="ui-icon-home" ajax="false"/>
                         </p:menubar>    
                         

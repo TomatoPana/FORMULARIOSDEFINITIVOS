@@ -16,10 +16,13 @@
         <h:body>
             <p:dialog header="Nueva encuesta" widgetVar="nueva" modal="true" >
                 <h:form>
-                    <p:messages id="signUpMessagge" showDetail="true" autoUpdate="true" closable="true" />
-                    <h:panelGrid columns="2" cellpadding="5">
-   
-                        <p:commandButton value="Registro" ajax="true"></p:commandButton>           <!--ACTION LISTENER-->
+                    <h:panelGrid columns="1" cellpadding="5">
+                        <h:form>
+                            <p:inputText placeholder="Titulo encuesta" value="#{myQuizzesBean.newQuizTitle}"></p:inputText>
+                            <p:inputText placeholder="Categoria de la encuesta" value="#{myQuizzesBean.newQuizCategory}"></p:inputText>
+                            <p:commandButton value="Registro" ajax="true" actionListener="#{myQuizzesBean.newQuiz}"></p:commandButton>           <!--ACTION LISTENER-->
+                        </h:form>
+                        
                     </h:panelGrid>
                 </h:form>
             </p:dialog>  
@@ -39,7 +42,7 @@
                         <f:facet name="header">
                             Mis encuestas
                         </f:facet>
-                        <p:commandLink update="tituloQuiz botones" actionListener="#{myQuizzesBean.setSelectedQuiz(outputQuiz)}" >
+                        <p:commandLink update="tituloQuiz botones" actionListener="#{myQuizzesBean.setSelectedQuiz(outputQuiz) }" >
                             <h:outputText value="#{outputQuiz.title}" />
                         </p:commandLink>
                     </p:dataList>
@@ -56,7 +59,7 @@
                                     </c:if>
 
                                     <c:if test="#{myQuizzesBean.selectedQuiz==null}">
-                                        <h:outputText id="tituloQuiz" value="Seleccione un quiz"/>
+                                        <h:outputText id="tituloQuiz" value="Seleccione una encuesta"/>
                                     </c:if>
                                     
                                 </h1>
@@ -65,15 +68,37 @@
                         </div>
                         <div class="ui-g">
                             <h:form id="botones">
+                                <p:dataTable var="q" value="#{myQuizzesBean.questionsList}"> 
+                                    <p:column headerText="Pregunta"> 
+                                        <h:outputText value="#{q.question}" /> 
+                                    </p:column> 
+                                    <p:column headerText="Ver respuestas/graficas"> 
+                                        <p:commandLink>
+                                            <h:outputText value="Ver" />
+                                        </p:commandLink>
+                                    </p:column> 
+                                    <p:column headerText="Editar"> 
+                                        <p:commandLink actionListener="#{myQuizzesBean.updateQuestion(q.id)}" >
+                                            <h:outputText value="Editar" />
+                                        </p:commandLink>
+                                    </p:column> 
+                                    <p:column headerText="Eliminar"> 
+                                        <p:commandLink actionListener="#{myQuizzesBean.deleteQuestion(q.id)}" >
+                                            <h:outputText value="Eliminar" />
+                                        </p:commandLink>
+                                    </p:column> 
+                                </p:dataTable>
                                 <div class="ui-g-12 ui-md-3">
-                                    <p:commandButton value="Editar encuesta" id="alter" actionListener="#{buttonView.buttonAction}" ajax="false" disabled="#{myQuizzesBean.selectedQuiz==null}" style="width: 100%" />
+                                    <p:commandButton value="Agregar pregunta abierta" id="open" actionListener="#{buttonView.buttonAction}" ajax="false" disabled="#{myQuizzesBean.selectedQuiz==null}" style="width: 100%" />
+                                </div>
+                                <div class="ui-g-12 ui-md-3">
+                                    <p:commandButton value="Agregar pregunta opcion mulitple" id="options" actionListener="#{buttonView.buttonAction}" ajax="false" disabled="#{myQuizzesBean.selectedQuiz==null}" style="width: 100%"/>
+                                </div>
+                                <div class="ui-g-12 ui-md-3">
+                                    <p:commandButton value="Agregar pregunta de rango" id="range" actionListener="#{buttonView.buttonAction}" ajax="false" disabled="#{myQuizzesBean.selectedQuiz==null}" style="width: 100%"/>
                                 </div>
                                 <div class="ui-g-12 ui-md-3">
                                     <p:commandButton value="Activar/desactivar encuesta" id="enable" actionListener="#{buttonView.buttonAction}" ajax="false" disabled="#{myQuizzesBean.selectedQuiz==null}" style="width: 100%"/>
-
-                                </div>
-                                <div class="ui-g-12 ui-md-3">
-                                    <p:commandButton value="Ver estadisticas" id="stats" actionListener="#{buttonView.buttonAction}" ajax="false" disabled="#{myQuizzesBean.selectedQuiz==null}" style="width: 100%"/>
                                 </div>
                                 <div class="ui-g-12 ui-md-3">
                                     <p:commandButton value="Eliminar encuesta" id="delete" actionListener="#{buttonView.buttonAction}" ajax="false" disabled="#{myQuizzesBean.selectedQuiz==null}" style="width: 100%"/>

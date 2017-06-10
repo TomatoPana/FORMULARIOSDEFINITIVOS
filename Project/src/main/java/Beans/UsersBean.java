@@ -116,15 +116,13 @@ public class UsersBean {
         
         alwaysNew= new Users();
         alwaysNew.setId(-55);
-        alwaysNew.setNombre("Seleccione un usuario");
+        alwaysNew.setNombre("Todos");
         usuarios.add(0, alwaysNew);
         usuario = alwaysNew;
         
         alwaysNewQuiz= new Quiz();
         alwaysNewQuiz.setId(-55);
-        alwaysNewQuiz.setTitle("Seleccione una encuesta");
-        quiz.add(0, alwaysNewQuiz);
-        myQuiz = alwaysNewQuiz;
+        alwaysNewQuiz.setTitle("todos");
     }
     
     public void updateQuiz()
@@ -181,6 +179,16 @@ public class UsersBean {
         entitymanager.close();
         try {
             context.getExternalContext().redirect("/forms/faces/AdminDashboard.xhtml");
+        } catch (IOException ex) {
+            Logger.getLogger(LoginBean.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public void myDash()
+    {
+        FacesContext context = FacesContext.getCurrentInstance();
+        try {
+            context.getExternalContext().redirect("/forms/faces/dashboard.xhtml");
         } catch (IOException ex) {
             Logger.getLogger(LoginBean.class.getName()).log(Level.SEVERE, null, ex);
         }

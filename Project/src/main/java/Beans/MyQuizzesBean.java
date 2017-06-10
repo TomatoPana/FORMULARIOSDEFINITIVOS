@@ -6,8 +6,11 @@
 package Beans;
 
 import Database.Categories;
+import Database.Questions;
 import Database.Quiz;
+import Database.Users;
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -30,14 +33,49 @@ public class MyQuizzesBean {
 
     private List<Database.Quiz> lista;
     private Database.Quiz selectedQuiz;
+    private List<Database.Questions> questionsList;
+    private Database.Questions miPregunta;
+    private String newQuizTitle;
+    private String newQuizCategory;
+
+    public String getNewQuizCategory() {
+        return newQuizCategory;
+    }
+
+    public void setNewQuizCategory(String newQuizCategory) {
+        this.newQuizCategory = newQuizCategory;
+    }
+
+    public String getNewQuizTitle() {
+        return newQuizTitle;
+    }
+
+    public void setNewQuizTitle(String newQuizTitle) {
+        this.newQuizTitle = newQuizTitle;
+    }
     
+
+    public List<Questions> getQuestionsList() {
+        return questionsList;
+    }
+
+    public void setQuestionsList(List<Questions> questionsList) {
+        this.questionsList = questionsList;
+    }
+
+    public Questions getMiPregunta() {
+        return miPregunta;
+    }
+
+    public void setMiPregunta(Questions miPregunta) {
+        this.miPregunta = miPregunta;
+    }
     
     @PostConstruct
     public void initialize() {
         FacesContext context = FacesContext.getCurrentInstance();
         Integer userId = (Integer) context.getExternalContext().getSessionMap().get("id");
-        Short type = (Short) context.getExternalContext().getSessionMap().get("type");
-        if(userId != null && type==0)
+        if(userId != null)
         {
             EntityManagerFactory emfactory = Persistence.createEntityManagerFactory( "Persistence" );
             EntityManager entitymanager = emfactory.createEntityManager();
@@ -55,6 +93,17 @@ public class MyQuizzesBean {
             }
         }
     }
+    
+    public void updateQuestion()
+    {
+        EntityManagerFactory emfactory = Persistence.createEntityManagerFactory( "Persistence" );
+        EntityManager entitymanager = emfactory.createEntityManager();
+        Query query = entitymanager.createNamedQuery("Questions.findByQuizId", Database.Questions.class);
+        query.setParameter("quizId", selectedQuiz.getId());
+        questionsList = query.getResultList();
+        entitymanager.close();
+
+    }
 
     public List<Quiz> getLista() {
         return lista;
@@ -70,6 +119,46 @@ public class MyQuizzesBean {
 
     public void setSelectedQuiz(Quiz selectedQuiz) {
         this.selectedQuiz = selectedQuiz;
+        EntityManagerFactory emfactory = Persistence.createEntityManagerFactory( "Persistence" );
+        EntityManager entitymanager = emfactory.createEntityManager();
+        Query query = entitymanager.createNamedQuery("Questions.findByQuizId", Database.Questions.class);
+        query.setParameter("quizId", selectedQuiz.getId());
+        questionsList = query.getResultList();
+        entitymanager.close();
+    }
+    
+    public void newQuiz()
+    {
+        FacesContext context = FacesContext.getCurrentInstance();
+        EntityManagerFactory emfactory = Persistence.createEntityManagerFactory( "Persistence" );
+        EntityManager entitymanager = emfactory.createEntityManager();
+        Integer userId = (Integer) context.getExternalContext().getSessionMap().get("id");
+        entitymanager.getTransaction().begin();
+        Categories c = new Categories();
+        c.setName(newQuizCategory);
+        entitymanager.persist(c);
+        entitymanager.flush();
+        Integer id = c.getId();
+        entitymanager.getTransaction().commit();
+        Quiz q = new Quiz();
+        q.setTitle(newQuizTitle);
+        q.setCategoryId(id);
+        q.setCreationDate(new Date());
+        q.setCreationDate(new Date());
+        q.setUserId(userId);
+        q.setEnabled(false);
+        entitymanager.persist(q);
+        entitymanager.getTransaction().commit();
+        entitymanager.close();
+        /*q.set
+        entitymanager.persist(usuario);
+        entitymanager.getTransaction().commit();
+        entitymanager.close();
+        try {
+            context.getExternalContext().redirect("/forms");
+        } catch (IOException ex) {
+            Logger.getLogger(LoginBean.class.getName()).log(Level.SEVERE, null, ex);
+        }*/
     }
     
     /**
