@@ -345,6 +345,7 @@ public class MyQuizzesBean {
     {
         Options op = new Options();
         op.setName(opcion);
+        op.setId((int) (System.currentTimeMillis() % Integer.MAX_VALUE));
         optionsList.add(op);
     }
     

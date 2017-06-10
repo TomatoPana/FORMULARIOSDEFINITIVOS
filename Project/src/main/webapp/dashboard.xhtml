@@ -50,7 +50,7 @@
                     </h:panelGrid>
                 </h:form>
             </p:dialog> 
-            <p:dialog header="Nueva pregunta de opciones" widgetVar="newOptions" modal="true" >
+            <p:dialog header="Nueva pregunta de opciones" widgetVar="newOptions" modal="true">
                 <h:form>
                     <h:panelGrid cellpadding="5">
                         <p:row>
@@ -63,27 +63,72 @@
                         </p:row>
                         <p:row>
                             <p:column colspan="2">
-                                <p:commandButton value="Guardar Opcion" ajax="true" actionListener="#{myQuizzesBean.newOption()}" update="formContenedor otroContenedor"></p:commandButton>
+                                <p:commandButton value="Guardar Opcion" ajax="true" actionListener="#{myQuizzesBean.newOption()}" update="@form"></p:commandButton>
                             </p:column>
                         </p:row>
+                        <p:dataTable value="#{myQuizzesBean.optionsList}" var="opt">
+                            <p:column headerText="Opcion">
+                                <h:outputText value="#{opt.name}"/>
+                            </p:column>
+                            <p:column headerText="Eliminar">
+                                <p:commandLink value="Eliminar" actionListener="#{myQuizzesBean.deleteOptionNew(opt.id)}" update="@form"/>
+                            </p:column>
+                        </p:dataTable>
                         <p:commandButton value="Guardar" ajax="true" actionListener="#{myQuizzesBean.newOptionsQuestion()}"></p:commandButton>           <!--ACTION LISTENER-->
                     </h:panelGrid>
                 </h:form>
-               
-                <h:panelGroup id="otroContenedor">
-                    <h:form id="formContenedor">
-                        <p:dataTable var="q" value="#{myQuizzesBeans.optionsList}" id="tablaOpciones">
-                            <p:column headerText="Opcion"> 
-                                <h:outputText value="#{q.name}"  /> 
-                            </p:column> 
-                            <p:column headerText="Eliminar"> 
-                                <p:commandLink actionListener="#{myQuizzesBean.deleteOptionNew(q.id)}">
-                                    <h:outputText value="Eliminar"  />
-                                </p:commandLink>
-                            </p:column> 
+            </p:dialog> 
+            
+            <p:dialog header="Nueva pregunta abierta" widgetVar="newOpen" modal="true" >
+                <h:form>
+                    <h:panelGrid columns="2" cellpadding="5">
+                        <p:outputLabel value="Pregunta: " />
+                        <p:inputText placeholder="Pregunta" value="#{myQuizzesBean.openQuestion.question}"></p:inputText>
+                        
+                        <p:commandButton value="Guardar" ajax="true" actionListener="#{myQuizzesBean.newOpenQuestion}"></p:commandButton>           <!--ACTION LISTENER-->
+                    </h:panelGrid>
+                </h:form>
+            </p:dialog>  
+            <p:dialog header="Nueva pregunta de rango" widgetVar="newRange" modal="true" >
+                <h:form>
+                    <h:panelGrid columns="2" cellpadding="5">
+                        <p:outputLabel value="Pregunta: " />
+                        <p:inputText placeholder="Pregunta" value="#{myQuizzesBean.rangeQuestion.question}"></p:inputText>
+                        <p:outputLabel value="Minimo: " />
+                        <p:inputNumber placeholder="Minimo" value="#{myQuizzesBean.rangeQuestion.min}"></p:inputNumber>
+                        <p:outputLabel value="Maximo: " />
+                        <p:inputNumber placeholder="Maximo" value="#{myQuizzesBean.rangeQuestion.max}"></p:inputNumber>
+                        <p:commandButton value="Guardar" ajax="true" actionListener="#{myQuizzesBean.newRangeQuestion}"></p:commandButton>           <!--ACTION LISTENER-->
+                    </h:panelGrid>
+                </h:form>
+            </p:dialog> 
+            <p:dialog header="Nueva pregunta de opciones" widgetVar="newOptions" modal="true">
+                <h:form>
+                    <h:panelGrid cellpadding="5">
+                        <p:row>
+                            <p:outputLabel value="Pregunta: " />
+                            <p:inputText placeholder="Pregunta" value="#{myQuizzesBean.optionsQuestion.question}"></p:inputText>
+                        </p:row>
+                        <p:row>
+                            <p:outputLabel value="Ingrese una opcion " />
+                            <p:inputText placeholder="Ingrese una opcion" value="#{myQuizzesBean.opcion}"></p:inputText>
+                        </p:row>
+                        <p:row>
+                            <p:column colspan="2">
+                                <p:commandButton value="Guardar Opcion" ajax="true" actionListener="#{myQuizzesBean.newOption()}" update="@form"></p:commandButton>
+                            </p:column>
+                        </p:row>
+                        <p:dataTable value="#{myQuizzesBean.optionsList}" var="opt">
+                            <p:column headerText="Opcion">
+                                <h:outputText value="#{opt.name}"/>
+                            </p:column>
+                            <p:column headerText="Eliminar">
+                                <p:commandLink value="Eliminar" actionListener="#{myQuizzesBean.deleteOptionNew(opt.id)}" update="@form"/>
+                            </p:column>
                         </p:dataTable>
-                    </h:form>
-                </h:panelGroup>
+                        <p:commandButton value="Guardar" ajax="true" actionListener="#{myQuizzesBean.newOptionsQuestion()}"></p:commandButton>           <!--ACTION LISTENER-->
+                    </h:panelGrid>
+                </h:form>
             </p:dialog> 
             
             <div class="ui-g">
