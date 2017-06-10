@@ -6,6 +6,7 @@
 package Beans;
 
 import Database.Categories;
+import Database.Options;
 import Database.Questions;
 import Database.Quiz;
 import Database.Users;
@@ -23,6 +24,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.Query;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  *
@@ -39,7 +41,52 @@ public class MyQuizzesBean {
     private String newQuizTitle;
     private String newQuizCategory;
     private List<String> allCategories;
+    private Questions openQuestion;
+    private Questions rangeQuestion;
+    private List<Options> optionsList;
+    private Questions optionsQuestion;
+    private String opcion;
 
+    public List<Options> getOptionsList() {
+        return optionsList;
+    }
+
+    public void setOptionsList(List<Options> optionsList) {
+        this.optionsList = optionsList;
+    }
+
+    public Questions getOptionsQuestion() {
+        return optionsQuestion;
+    }
+
+    public void setOptionsQuestion(Questions optionsQuestion) {
+        this.optionsQuestion = optionsQuestion;
+    }
+
+    public String getOpcion() {
+        return opcion;
+    }
+
+    public void setOpcion(String opcion) {
+        this.opcion = opcion;
+    }
+    
+    public Questions getRangeQuestion() {
+        return rangeQuestion;
+    }
+
+    public void setRangeQuestion(Questions rangeQuestion) {
+        this.rangeQuestion = rangeQuestion;
+    }
+    
+    public Questions getOpenQuestion() {
+        return openQuestion;
+    }
+
+    public void setOpenQuestion(Questions openQuestion) {
+        this.openQuestion = openQuestion;
+    }
+    
     public List<String> getAllCategories() {
         return allCategories;
     }
@@ -85,8 +132,24 @@ public class MyQuizzesBean {
     @PostConstruct
     public void initialize() {
         allCategories = new ArrayList<String>();
+        openQuestion = new Questions();
+        rangeQuestion = new Questions();
+        optionsList = new ArrayList<Options>();
+        optionsQuestion = new Questions();
+        opcion = null;
         FacesContext context = FacesContext.getCurrentInstance();
         Integer userId = (Integer) context.getExternalContext().getSessionMap().get("id");
+        HttpServletRequest req = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
+        String idReq = req.getParameter("id");
+        if(idReq!=null)    
+        {
+            EntityManagerFactory emfactory = Persistence.createEntityManagerFactory( "Persistence" );
+            EntityManager entitymanager = emfactory.createEntityManager();
+            selectedQuiz = entitymanager.find(Quiz.class, Integer.parseInt(idReq));
+            entitymanager.close();
+            updateQuestion();
+        }
+        
         if(userId != null)
         {
             EntityManagerFactory emfactory = Persistence.createEntityManagerFactory( "Persistence" );
@@ -183,7 +246,7 @@ public class MyQuizzesBean {
         entitymanager.getTransaction().commit();
         entitymanager.close();
         try {
-            context.getExternalContext().redirect("/forms/faces/dashboard.xhtml");
+            context.getExternalContext().redirect("/forms/faces/dashboard.xhtml?id="+selectedQuiz.getId());
         } catch (IOException ex) {
             Logger.getLogger(LoginBean.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -200,7 +263,7 @@ public class MyQuizzesBean {
         entitymanager.remove(selectedQuiz);
         entitymanager.getTransaction().commit();
         try {
-            context.getExternalContext().redirect("/forms/faces/dashboard.xhtml");
+            context.getExternalContext().redirect("/forms/faces/dashboard.xhtml?id="+selectedQuiz.getId());
         } catch (IOException ex) {
             Logger.getLogger(LoginBean.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -224,4 +287,125 @@ public class MyQuizzesBean {
     public MyQuizzesBean() {
     }
     
+    public void newOpenQuestion()
+    {
+        FacesContext context = FacesContext.getCurrentInstance();
+        EntityManagerFactory emfactory = Persistence.createEntityManagerFactory( "Persistence" );
+        EntityManager entitymanager = emfactory.createEntityManager();
+        entitymanager.getTransaction().begin();
+        openQuestion.setQuizId(selectedQuiz.getId());
+        openQuestion.setType("open");
+        entitymanager.persist(openQuestion);
+        entitymanager.getTransaction().commit();
+        entitymanager.close();
+        openQuestion = new Questions();
+        try {
+            context.getExternalContext().redirect("/forms/faces/dashboard.xhtml?id="+selectedQuiz.getId());
+        } catch (IOException ex) {
+            Logger.getLogger(LoginBean.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+            
+    public void newRangeQuestion()
+    {
+        FacesContext context = FacesContext.getCurrentInstance();
+        EntityManagerFactory emfactory = Persistence.createEntityManagerFactory( "Persistence" );
+        EntityManager entitymanager = emfactory.createEntityManager();
+        entitymanager.getTransaction().begin();
+        rangeQuestion.setQuizId(selectedQuiz.getId());
+        rangeQuestion.setType("range");
+        entitymanager.persist(rangeQuestion);
+        entitymanager.getTransaction().commit();
+        entitymanager.close();
+        rangeQuestion = new Questions();
+        try {
+            context.getExternalContext().redirect("/forms/faces/dashboard.xhtml?id="+selectedQuiz.getId());
+        } catch (IOException ex) {
+            Logger.getLogger(LoginBean.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public void deleteQuestion(Integer id)
+    {
+        FacesContext context = FacesContext.getCurrentInstance();
+        EntityManagerFactory emfactory = Persistence.createEntityManagerFactory( "Persistence" );
+        EntityManager entitymanager = emfactory.createEntityManager();
+        entitymanager.getTransaction().begin();
+        Questions x = entitymanager.find(Questions.class, id);
+        entitymanager.remove(x);
+        entitymanager.getTransaction().commit();
+        try {
+            context.getExternalContext().redirect("/forms/faces/dashboard.xhtml?id="+selectedQuiz.getId());
+        } catch (IOException ex) {
+            Logger.getLogger(LoginBean.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public void newOption()
+    {
+        Options op = new Options();
+        op.setName(opcion);
+        optionsList.add(op);
+    }
+    
+    public void deleteOption(Integer id){
+        FacesContext context = FacesContext.getCurrentInstance();
+        EntityManagerFactory emfactory = Persistence.createEntityManagerFactory( "Persistence" );
+        EntityManager entitymanager = emfactory.createEntityManager();
+        entitymanager.getTransaction().begin();
+        Questions x = entitymanager.find(Questions.class, id);
+        entitymanager.remove(x);
+        optionsList.clear();
+        entitymanager.getTransaction().commit();
+        entitymanager.close();
+        getAllMyOptions();
+    }
+    
+    public void deleteOptionNew(Integer id){
+        FacesContext context = FacesContext.getCurrentInstance();
+        int v = 0;
+        for(Options a : optionsList)
+        {
+            if(a.getId() == id)
+                break;
+            v++;
+        }
+        optionsList.remove(v);
+    }
+    
+    public void getAllMyOptions()
+    {
+        EntityManagerFactory emfactory = Persistence.createEntityManagerFactory( "Persistence" );
+        EntityManager entitymanager = emfactory.createEntityManager();
+        Query query = entitymanager.createNamedQuery("Options.findByIdQuestion", Options.class);
+        optionsList = query.getResultList();
+        entitymanager.close();
+    }
+    
+    public void newOptionsQuestion()    
+    {
+        FacesContext context = FacesContext.getCurrentInstance();
+        EntityManagerFactory emfactory = Persistence.createEntityManagerFactory( "Persistence" );
+        EntityManager entitymanager = emfactory.createEntityManager();
+        entitymanager.getTransaction().begin();
+        optionsQuestion.setType("options");
+        optionsQuestion.setQuizId(selectedQuiz.getId());
+        entitymanager.persist(optionsQuestion);
+        entitymanager.flush();
+        Integer id = optionsQuestion.getId();
+        for(Options x : optionsList)
+        {
+            x.setIdQuestion(id);
+            entitymanager.persist(x);
+        }
+        entitymanager.getTransaction().commit();
+        entitymanager.close();
+        rangeQuestion = new Questions();
+        try {
+            context.getExternalContext().redirect("/forms/faces/dashboard.xhtml?id="+selectedQuiz.getId());
+        } catch (IOException ex) {
+            Logger.getLogger(LoginBean.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+            
 }
