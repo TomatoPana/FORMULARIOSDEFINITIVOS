@@ -79,17 +79,16 @@
                 </h:form>
             </p:dialog> 
             
-            <p:dialog header="Nueva pregunta abierta" widgetVar="newOpen" modal="true" >
+            <p:dialog header="Editar pregunta abierta: #{myQuizzesBean.openQuestion.question}" widgetVar="editOpen" modal="true" id="dialogEditOpen">
                 <h:form>
                     <h:panelGrid columns="2" cellpadding="5">
                         <p:outputLabel value="Pregunta: " />
                         <p:inputText placeholder="Pregunta" value="#{myQuizzesBean.openQuestion.question}"></p:inputText>
-                        
-                        <p:commandButton value="Guardar" ajax="true" actionListener="#{myQuizzesBean.newOpenQuestion}"></p:commandButton>           <!--ACTION LISTENER-->
+                        <p:commandButton value="Guardar" ajax="true" actionListener="#{myQuizzesBean.saveOpenQuestion}"></p:commandButton>
                     </h:panelGrid>
                 </h:form>
             </p:dialog>  
-            <p:dialog header="Nueva pregunta de rango" widgetVar="newRange" modal="true" >
+            <p:dialog header="Editar pregunta de rango: #{myQuizzesBean.rangeQuestion.question}" widgetVar="editRange" modal="true" id="dialogEditRange" >
                 <h:form>
                     <h:panelGrid columns="2" cellpadding="5">
                         <p:outputLabel value="Pregunta: " />
@@ -98,11 +97,11 @@
                         <p:inputNumber placeholder="Minimo" value="#{myQuizzesBean.rangeQuestion.min}"></p:inputNumber>
                         <p:outputLabel value="Maximo: " />
                         <p:inputNumber placeholder="Maximo" value="#{myQuizzesBean.rangeQuestion.max}"></p:inputNumber>
-                        <p:commandButton value="Guardar" ajax="true" actionListener="#{myQuizzesBean.newRangeQuestion}"></p:commandButton>           <!--ACTION LISTENER-->
+                        <p:commandButton value="Guardar" ajax="true" actionListener="#{myQuizzesBean.saveRangeQuestion}"></p:commandButton>
                     </h:panelGrid>
                 </h:form>
             </p:dialog> 
-            <p:dialog header="Nueva pregunta de opciones" widgetVar="newOptions" modal="true">
+            <p:dialog header="Editar pregunta de opciones: #{myQuizzesBean.optionsQuestion.question}" widgetVar="editOptions" modal="true" id="dialogEditOptions">
                 <h:form>
                     <h:panelGrid cellpadding="5">
                         <p:row>
@@ -115,7 +114,7 @@
                         </p:row>
                         <p:row>
                             <p:column colspan="2">
-                                <p:commandButton value="Guardar Opcion" ajax="true" actionListener="#{myQuizzesBean.newOption()}" update="@form"></p:commandButton>
+                                <p:commandButton value="Guardar Opcion" ajax="true" actionListener="#{myQuizzesBean.createOption}" update="@form"></p:commandButton>
                             </p:column>
                         </p:row>
                         <p:dataTable value="#{myQuizzesBean.optionsList}" var="opt">
@@ -123,14 +122,50 @@
                                 <h:outputText value="#{opt.name}"/>
                             </p:column>
                             <p:column headerText="Eliminar">
-                                <p:commandLink value="Eliminar" actionListener="#{myQuizzesBean.deleteOptionNew(opt.id)}" update="@form"/>
+                                <p:commandLink value="Eliminar" actionListener="#{myQuizzesBean.deleteOption(opt.id)}" update="@form"/>
                             </p:column>
                         </p:dataTable>
-                        <p:commandButton value="Guardar" ajax="true" actionListener="#{myQuizzesBean.newOptionsQuestion()}"></p:commandButton>           <!--ACTION LISTENER-->
+                        <p:commandButton value="Guardar" ajax="true" actionListener="#{myQuizzesBean.saveOptionsQuestion()}"></p:commandButton>           <!--ACTION LISTENER-->
                     </h:panelGrid>
                 </h:form>
             </p:dialog> 
-            
+            <p:dialog id="graficasRespuestas" widgetVar="graficasRespuestas" modal="true">
+                
+                <c:if test="#{myQuizzesBean.watchQuestion.type=='options'}">
+                    <p:chart type="pie" model="#{myQuizzesBean.grafiquitaCircular}" style="width:400px;height:300px" />
+                    <p:dataTable var="q" value="#{myQuizzesBean.answersList}"> <br/>
+                        <p:column headerText="Persona"> 
+                            <h:outputText value="#{q.userAnswer.email}" /> 
+                        </p:column> 
+                        <p:column headerText="Respuesta"> 
+                            <h:outputText value="#{q.options.name}" /> 
+                        </p:column> 
+                    </p:dataTable>
+                </c:if>
+                <c:if test="#{myQuizzesBean.watchQuestion.type=='open'}">
+                    <p:dataTable var="q" value="#{myQuizzesBean.answersList}"> <br/>
+                        <p:column headerText="Persona"> 
+                            <h:outputText value="#{q.userAnswer.email}" /> 
+                        </p:column> 
+                        <p:column headerText="Respuesta"> 
+                            <h:outputText value="#{q.answer.answer}" /> 
+                        </p:column> 
+                    </p:dataTable>
+                </c:if>
+                <c:if test="#{myQuizzesBean.watchQuestion.type=='range'}">
+                    <p:chart type="bar" model="#{myQuizzesBean.grafiquitaBarras}" style="width:400px;" />
+                    <p:dataTable var="q" value="#{myQuizzesBean.answersList}"> <br/>
+                        <p:column headerText="Persona"> 
+                            <h:outputText value="#{q.userAnswer.email}" /> 
+                        </p:column> 
+                        <p:column headerText="Respuesta"> 
+                            <h:outputText value="#{q.answer.answer}" /> 
+                        </p:column> 
+                    </p:dataTable>
+                </c:if>
+                
+                    
+            </p:dialog>
             <div class="ui-g">
                 <div class="ui-g-12">
                     <h:form id="formulario">
@@ -178,13 +213,19 @@
                                         <h:outputText value="#{q.question}" /> 
                                     </p:column> 
                                     <p:column headerText="Ver respuestas/graficas"> 
-                                        <p:commandLink>
+                                        <p:commandLink actionListener="#{myQuizzesBean.createChart(q.id)}" oncomplete="PF('graficasRespuestas').show();" update="graficasRespuestas">
                                             <h:outputText value="Ver" />
                                         </p:commandLink>
                                     </p:column> 
                                     <p:column headerText="Editar"> 
-                                        <p:commandLink actionListener="#{myQuizzesBean.updateQuestion(q.id)}" >
-                                            <h:outputText value="Editar" />
+                                        <p:commandLink actionListener="#{myQuizzesBean.updateOpenQuestion(q.id)}" rendered="#{q.type=='open'}" update="dialogEditOpen" oncomplete="PF('editOpen').show();">
+                                            <h:outputText value="Editar Pregunta abierta" />
+                                        </p:commandLink>
+                                        <p:commandLink actionListener="#{myQuizzesBean.updateOptionsQuestion(q.id)}" rendered="#{q.type=='options'}" update="dialogEditOptions" oncomplete="PF('editOptions').show();">
+                                            <h:outputText value="Editar Pregunta Opciones" />
+                                        </p:commandLink>
+                                        <p:commandLink actionListener="#{myQuizzesBean.updateRangeQuestion(q.id)}" rendered="#{q.type=='range'}" update="dialogEditRange" oncomplete="PF('editRange').show();">
+                                            <h:outputText value="Editar Pregunta Rango" />
                                         </p:commandLink>
                                     </p:column> 
                                     <p:column headerText="Eliminar"> 

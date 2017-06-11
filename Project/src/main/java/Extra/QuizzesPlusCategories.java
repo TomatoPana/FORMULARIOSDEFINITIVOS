@@ -5,6 +5,7 @@
  */
 package Extra;
 
+import Database.Options;
 import Database.Quiz;
 import java.util.Date;
 
@@ -15,10 +16,19 @@ import java.util.Date;
 public class QuizzesPlusCategories {
     private String categoria;
     private Quiz quiz;
+    private Options options;
 
+    public Options getOptions() {
+        return options;
+    }
+
+    public void setOptions(Options options) {
+        this.options = options;
+    }
     public QuizzesPlusCategories(String categoria, Quiz quiz) {
         this.categoria = categoria;
         this.quiz = quiz;
+        this.options = null;
     }
     
     public Quiz getQuiz() {

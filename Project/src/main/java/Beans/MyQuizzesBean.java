@@ -5,11 +5,14 @@
  */
 package Beans;
 
+import Database.Answer;
 import Database.Categories;
 import Database.Options;
 import Database.Questions;
 import Database.Quiz;
+import Database.UserAnswer;
 import Database.Users;
+import Extra.AnswerPlusUser;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -25,6 +28,9 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.Query;
 import javax.servlet.http.HttpServletRequest;
+import org.primefaces.model.chart.BarChartModel;
+import org.primefaces.model.chart.ChartSeries;
+import org.primefaces.model.chart.PieChartModel;
 
 /**
  *
@@ -46,6 +52,43 @@ public class MyQuizzesBean {
     private List<Options> optionsList;
     private Questions optionsQuestion;
     private String opcion;
+    private Questions watchQuestion;
+    private PieChartModel grafiquitaCircular;
+    private List<AnswerPlusUser> answersList;
+    private BarChartModel grafiquitaBarras;
+
+    public BarChartModel getGrafiquitaBarras() {
+        return grafiquitaBarras;
+    }
+
+    public void setGrafiquitaBarras(BarChartModel grafiquitaBarras) {
+        this.grafiquitaBarras = grafiquitaBarras;
+    }
+    
+
+    public List<AnswerPlusUser> getAnswersList() {
+        return answersList;
+    }
+
+    public void setAnswersList(List<AnswerPlusUser> answersList) {
+        this.answersList = answersList;
+    }
+
+    public PieChartModel getGrafiquitaCircular() {
+        return grafiquitaCircular;
+    }
+
+    public void setGrafiquitaCircular(PieChartModel grafiquitaCircular) {
+        this.grafiquitaCircular = grafiquitaCircular;
+    }
+
+    public Questions getWatchQuestion() {
+        return watchQuestion;
+    }
+
+    public void setWatchQuestion(Questions watchQuestion) {
+        this.watchQuestion = watchQuestion;
+    }
 
     public List<Options> getOptionsList() {
         return optionsList;
@@ -137,6 +180,7 @@ public class MyQuizzesBean {
         optionsList = new ArrayList<Options>();
         optionsQuestion = new Questions();
         opcion = null;
+        answersList = new ArrayList<AnswerPlusUser>();
         FacesContext context = FacesContext.getCurrentInstance();
         Integer userId = (Integer) context.getExternalContext().getSessionMap().get("id");
         HttpServletRequest req = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
@@ -354,7 +398,7 @@ public class MyQuizzesBean {
         EntityManagerFactory emfactory = Persistence.createEntityManagerFactory( "Persistence" );
         EntityManager entitymanager = emfactory.createEntityManager();
         entitymanager.getTransaction().begin();
-        Questions x = entitymanager.find(Questions.class, id);
+        Options x = entitymanager.find(Options.class, id);
         entitymanager.remove(x);
         optionsList.clear();
         entitymanager.getTransaction().commit();
@@ -379,6 +423,7 @@ public class MyQuizzesBean {
         EntityManagerFactory emfactory = Persistence.createEntityManagerFactory( "Persistence" );
         EntityManager entitymanager = emfactory.createEntityManager();
         Query query = entitymanager.createNamedQuery("Options.findByIdQuestion", Options.class);
+        query.setParameter("idQuestion", optionsQuestion.getId());
         optionsList = query.getResultList();
         entitymanager.close();
     }
@@ -408,5 +453,210 @@ public class MyQuizzesBean {
             Logger.getLogger(LoginBean.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    
+    public void saveOpenQuestion()
+    {
+        FacesContext context = FacesContext.getCurrentInstance();
+        EntityManagerFactory emfactory = Persistence.createEntityManagerFactory( "Persistence" );
+        EntityManager entitymanager = emfactory.createEntityManager();
+        entitymanager.getTransaction().begin();
+        
+        
+        Query query = entitymanager.createQuery("Update Questions q SET q.question = '" + openQuestion.getQuestion() + "' WHERE q.id =" + openQuestion.getId());
+        
+        query.executeUpdate();
+        try {
+            context.getExternalContext().redirect("/forms/faces/dashboard.xhtml?id="+selectedQuiz.getId());
+        } catch (IOException ex) {
+            Logger.getLogger(LoginBean.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        entitymanager.getTransaction().commit();
+    }
+    
+    public void saveRangeQuestion()
+    {
+        FacesContext context = FacesContext.getCurrentInstance();
+        EntityManagerFactory emfactory = Persistence.createEntityManagerFactory( "Persistence" );
+        EntityManager entitymanager = emfactory.createEntityManager();
+        entitymanager.getTransaction().begin();
+        
+        
+        Query query = entitymanager.createQuery("Update Questions q SET q.question = '" + rangeQuestion.getQuestion() + "', q.min = " + rangeQuestion.getMin() + ", q.max = " + rangeQuestion.getMax() + "  WHERE q.id =" + rangeQuestion.getId());        
+        query.executeUpdate();
+        try {
+            context.getExternalContext().redirect("/forms/faces/dashboard.xhtml?id="+selectedQuiz.getId());
+        } catch (IOException ex) {
+            Logger.getLogger(LoginBean.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        entitymanager.getTransaction().commit();
+    }
+    
+    public void saveOptionsQuestion()
+    {
+        FacesContext context = FacesContext.getCurrentInstance();
+        EntityManagerFactory emfactory = Persistence.createEntityManagerFactory( "Persistence" );
+        EntityManager entitymanager = emfactory.createEntityManager();
+        entitymanager.getTransaction().begin();
+        
+        
+        Query query = entitymanager.createQuery("Update Questions q SET q.question = '" + optionsQuestion.getQuestion() + "' WHERE q.id =" + optionsQuestion.getId());
+        query.executeUpdate();
+        try {
+            context.getExternalContext().redirect("/forms/faces/dashboard.xhtml?id="+selectedQuiz.getId());
+        } catch (IOException ex) {
+            Logger.getLogger(LoginBean.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        entitymanager.getTransaction().commit();
+    }
+    
+    public void updateOpenQuestion(Integer id)
+    {
+        FacesContext context = FacesContext.getCurrentInstance();
+        EntityManagerFactory emfactory = Persistence.createEntityManagerFactory( "Persistence" );
+        EntityManager entitymanager = emfactory.createEntityManager();
+        openQuestion = entitymanager.find(Questions.class, id);
+    }
+    
+    public void updateOptionsQuestion(Integer id)
+    {
+        FacesContext context = FacesContext.getCurrentInstance();
+        EntityManagerFactory emfactory = Persistence.createEntityManagerFactory( "Persistence" );
+        EntityManager entitymanager = emfactory.createEntityManager();
+        optionsQuestion = entitymanager.find(Questions.class, id);
+        Query query = entitymanager.createNamedQuery("Options.findByIdQuestion", Options.class);
+        query.setParameter("idQuestion", optionsQuestion.getId());
+        optionsList = query.getResultList();
+    }
+    
+    public void updateRangeQuestion(Integer id)
+    {
+        FacesContext context = FacesContext.getCurrentInstance();
+        EntityManagerFactory emfactory = Persistence.createEntityManagerFactory( "Persistence" );
+        EntityManager entitymanager = emfactory.createEntityManager();
+        rangeQuestion = entitymanager.find(Questions.class, id);
+    }
+    
+    public void createOption()
+    {
+        FacesContext context = FacesContext.getCurrentInstance();
+        EntityManagerFactory emfactory = Persistence.createEntityManagerFactory( "Persistence" );
+        EntityManager entitymanager = emfactory.createEntityManager();
+        entitymanager.getTransaction().begin();
+        Options x = new Options();
+        x.setIdQuestion(optionsQuestion.getId());
+        x.setName(opcion);
+        entitymanager.persist(x);
+        entitymanager.flush();
+        entitymanager.getTransaction().commit();
+        entitymanager.close();
+        getAllMyOptions();
+    }
+    
+    public void createChart(int id)
+    {
+        answersList.clear();
+        while(answersList.size()>0)
+        {
+            answersList.remove(1);
+        }
+        EntityManagerFactory emfactory = Persistence.createEntityManagerFactory( "Persistence" );
+        EntityManager entitymanager = emfactory.createEntityManager();
+        watchQuestion = entitymanager.find(Questions.class, id);
+        Query query = entitymanager.createNamedQuery("UserAnswer.findByQuestionId", UserAnswer.class);
+        query.setParameter("questionId", id);
+        List<UserAnswer> listaRespuestasUsuario = query.getResultList();
+        grafiquitaCircular = new PieChartModel();
+        for(UserAnswer x: listaRespuestasUsuario)
+        {
+            Answer b = entitymanager.find(Answer.class, x.getAnswerId());
+            AnswerPlusUser apu;
+            if(watchQuestion.getType().equals("options"))
+            {
+                if(b!=null && entitymanager.find(Options.class, Integer.parseInt(b.getAnswer()))!=null)
+                {
+                    apu = new AnswerPlusUser(b,x);
+                    answersList.add(apu);
+                }
+            }
+            else if(b!=null){
+                apu = new AnswerPlusUser(b,x);
+                answersList.add(apu);
+            }
+        }
+        if(watchQuestion.getType().equals("options"))
+        {
+            for(AnswerPlusUser x : answersList)
+            {
+                x.setOptions(entitymanager.find(Options.class, Integer.parseInt(x.getAnswer().getAnswer())));
+            }
+            Object[][] conteo;
+            conteo = new Object[answersList.size()][2];
+            int b = 0;
+            for(AnswerPlusUser x : answersList)
+            {
+                Boolean comprobacion = true;
+                for(int posicion = 0; posicion < b; posicion++)
+                {
+                    if(conteo[posicion][0] instanceof String)
+                    {
+                        if(((String)conteo[posicion][0]).equals(x.getAnswer().getAnswer()))
+                        {
+                            Integer valor = (Integer)conteo[posicion][1];
+                            valor++;
+                            conteo[posicion][1] = valor;
+                            comprobacion = false;
+                            break;
+                        }
+                    }
+                }
+                if(comprobacion)
+                {
+                    conteo[b][0] = x.getAnswer().getAnswer();
+                    conteo[b][1] = 1;
+                }
+                b++;
+            }
+            int c = 0;
+            while(conteo[c][0] instanceof String)
+            {
+                Options opt = entitymanager.find(Options.class, Integer.parseInt((String)conteo[c][0]));
+                if(opt!=null)
+                    grafiquitaCircular.set(opt.getName(), (Integer)conteo[c][1]);
+                c++;
+            }
+            grafiquitaCircular.setTitle(watchQuestion.getQuestion());
+            grafiquitaCircular.setLegendPosition("w");
+        }
+        else if(watchQuestion.getType().equals("range")){
+            grafiquitaBarras = new BarChartModel();
+            double distancia = watchQuestion.getMax()-watchQuestion.getMin();
+            double k = 1 + 3.2222* (Math.log10(answersList.size()));
+            double ancho = distancia / k;
+            Double minActual = watchQuestion.getMin();
+            Double maxActual =  minActual + ancho;
+            ChartSeries valores = new ChartSeries();
+            valores.setLabel(watchQuestion.getQuestion());
+            while(watchQuestion.getMax()>minActual)
+            {
+                int cantidad = 0;
+                for(AnswerPlusUser u : answersList)
+                {
+                    Float val = Float.parseFloat(u.getAnswer().getAnswer());
+                    if(val >= minActual && val < maxActual)
+                    {
+                        cantidad++;
+                    }
+                }
+                valores.set(String.format("%.2f", minActual) + " - " + String.format("%.2f", maxActual), cantidad);
+                minActual = maxActual;
+                maxActual+=ancho;
+            }
+            grafiquitaBarras.addSeries(valores);
+        }
+        else if(watchQuestion.getType().equals("open")){
             
+        }
+        
+    }
+        
 }
