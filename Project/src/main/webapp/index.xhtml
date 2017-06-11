@@ -101,36 +101,31 @@
 
 
                 </div>
-                <div class="ui-g-12 ui-md-2">
-                    <h:form>
-                        <p:panel header="Filtro de Busqueda" style="margin-bottom: 10px;">
-                            <h:panelGrid columns="1">
-                                <p:outputLabel for="categoryList" value="Categoria: "/>
-                                <p:selectOneMenu id="categoryList" value="#{categoriesBean.categoryName}" style="width:200px;">
-                                    <f:selectItem itemLabel="Selecciona una categoria" itemValue="" noSelectionOption="true" />
-                                    <f:selectItems value="#{categoriesBean.category}" />
-                                </p:selectOneMenu>
-                            </h:panelGrid>
-                            <p:commandButton value="Filtrar Encuestas" id="ajax" styleClass="ui-priority-primary"  />
-                        </p:panel>
-                    </h:form>
-                    
-
-                </div>
                 <div class="ui-g-12 ui-md-10 ui-g-nopad">
                     <!-- TODO EL CONTENIDO -->
                     <div class="ui-g-12 ui-g-nopad">
                         <div class="ui-g">
                             <div class="ui-g-12 ui-md-12">
                                 <h:form>
-                                    <p:dataTable var="test" value="#{filterBean.categorias}">
-                                        <p:column headerText="Categoria">
+                                    <p:dataTable var="test" value="#{filterBean.categorias}" widgetVar="quizTable" 
+                                                 emptyMessage="No se ha encontrado ninguna encuesta de esta categoria"
+                                                 filteredValue="#{filterBean.filteredCategorias}">
+                                        
+                                        <p:column headerText="Fecha de creación" filterMatchMode="lte">
+                                            <h:outputText value="#{test.quiz.creationDate}" />
+                                        </p:column>
+
+                                        <p:column filterBy="#{test.categoria}" headerText="Categoria" filterMatchMode="exact">
+                                            <f:facet name="filter">
+                                                <p:selectOneMenu onchange="PF('quizTable').filter()">
+                                                    <f:selectItem itemLabel="Todas las categorias" itemValue="#{null}" noSelectionOption="true" />
+                                                    <f:selectItems value="#{categoriesBean.category}"/>
+                                                </p:selectOneMenu>
+                                            </f:facet>
                                             <h:outputText value="#{test.categoria}" />
                                         </p:column>
                                         
-                                        <p:column headerText="Fecha de creación">
-                                            <h:outputText value="#{test.quiz.creationDate}" />
-                                        </p:column>
+
                                         
                                         <p:column headerText="Seleccione una encuesta">
                                             <p:commandLink value="#{test.quiz.title}" actionListener="#{QuizAnswerBean.selectedQuiz(test.quiz.id)}" oncomplete="PF('quiz').show();" ajax="true" update="quiz"></p:commandLink>
