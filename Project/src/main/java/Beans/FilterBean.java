@@ -82,17 +82,19 @@ public class FilterBean {
         EntityManagerFactory emfactory = Persistence.createEntityManagerFactory("Persistence");
         EntityManager entitymanager = emfactory.createEntityManager();
         Query query = entitymanager.createNamedQuery("Quiz.findAll", Quiz.class);
-        lista = query.getResultList();
+        List<Quiz> listaAux = query.getResultList();
+        lista = new ArrayList();
         query = entitymanager.createNamedQuery("Categories.findAll",Categories.class);
         cat = query.getResultList();
         System.out.println("Mostrar las encuestas");
-        for (Database.Quiz a: lista) {
+        for (Database.Quiz a: listaAux) {
             System.out.println(a.getTitle());
             System.out.println(a.getCategoryId());
             for(Categories x: cat)
             {
-                if(a.getCategoryId() == x.getId())
+                if(a.getCategoryId() == x.getId() && a.getEnabled())
                 {
+                    lista.add(a);
                     QuizzesPlusCategories objeto = new QuizzesPlusCategories(x.getName(), a);
                     categorias.add(objeto);
                 }
